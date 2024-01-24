@@ -154,23 +154,7 @@ autoload -U +X bashcompinit && bashcompinit
 complete -o nospace -C /opt/homebrew/bin/terraform terraform
 
 
-# >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/Users/aman/miniconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
-if [ $? -eq 0 ]; then
-    eval "$__conda_setup"
-else
-    if [ -f "/Users/aman/miniconda3/etc/profile.d/conda.sh" ]; then
-        . "/Users/aman/miniconda3/etc/profile.d/conda.sh"
-    else
-        export PATH="/Users/aman/miniconda3/bin:$PATH"
-    fi
-fi
-unset __conda_setup
-# <<< conda initialize <<<
-
 export PATH="/Applications/Sublime Text.app/Contents/SharedSupport/bin:$PATH"
-export ELASTIC_PASSWORD=51V9Xd=n*gc5FDS-4d2g
 
 # bun completions
 [ -s "/Users/aman/.bun/_bun" ] && source "/Users/aman/.bun/_bun"
