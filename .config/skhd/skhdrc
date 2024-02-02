@@ -61,10 +61,3 @@ shift + alt - 7 : yabai -m window --space 7;
 ctrl + alt - q : yabai --stop-service
 ctrl + alt - s : yabai --start-service 
 ctrl + alt - r : yabai --stop-service
-
-ralt - s : open -a slack
-ralt - t : open -a iTerm
-ralt - b : open -a Brave\ Browser
-
-
-# capslock + s: open -a slack

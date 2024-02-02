@@ -100,6 +100,7 @@ return {
 
 	-- maximizes and restores current window
 	"szw/vim-maximizer",
+	"mbbill/undotree",
 
 	{
 		"ThePrimeagen/harpoon",

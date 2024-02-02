@@ -27,4 +27,5 @@ config.window_padding = {
 	bottom = "0",
 }
 config.cell_width = 1.01
+
 return config

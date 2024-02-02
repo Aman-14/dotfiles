@@ -44,7 +44,7 @@ return {
 			a = { vim.lsp.buf.code_action, "Code Action" },
 			A = { vim.lsp.buf.range_code_action, "Range Code Actions" },
 			s = { vim.lsp.buf.signature_help, "Display Signature Information" },
-			r = { vim.lsp.buf.rqname, "Rename all references" },
+			r = { vim.lsp.buf.rename, "Rename all references" },
 			i = { require("telescope.builtin").lsp_implementations, "Implementation" },
 			l = { "<cmd>TroubleToggle document_diagnostics<cr>", "Document Diagnostics (Trouble)" },
 			L = { "<cmd>TroubleToggle workspace_diagnostics<cr>", "Workspace Diagnostics (Trouble)" },

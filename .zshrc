@@ -1,3 +1,5 @@
+#!/bin/zsh
+
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
@@ -127,13 +129,8 @@ alias git_main_branch='echo production'
 alias redis-cli='docker exec -it redis redis-cli'
 
 function f () {
-    local file=$(ls ~/.$1 | fzf)
-    [ -n "$file" ] && cd ~/.$1/$file && nvim
+    zsh ~/search.sh
 }
-
-
-# create a fn called secret to get the secret from aws secrets manager
-#
 
 function secret () {
     aws secretsmanager get-secret-value --secret-id "$1" | jq '.SecretString | fromjson'
