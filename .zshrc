@@ -129,8 +129,10 @@ alias git_main_branch='echo production'
 alias redis-cli='docker exec -it redis redis-cli'
 
 function f () {
-    zsh ~/search.sh
+    source ~/scripts/search.sh
 }
+
+# history | sed 's/^[[:space:]]*[0-9]*//' | sort | uniq | fzf
 
 function secret () {
     aws secretsmanager get-secret-value --secret-id "$1" | jq '.SecretString | fromjson'
