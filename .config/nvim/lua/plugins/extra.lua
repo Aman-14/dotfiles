@@ -134,4 +134,13 @@ return {
 			vim.fn["mkdp#util#install"]()
 		end,
 	},
+	-- find and replace
+	{
+		"nvim-pack/nvim-spectre",
+		config = function()
+			require("spectre").setup()
+		end,
+	},
+	"Exafunction/codeium.vim",
+	"sindrets/diffview.nvim",
 }

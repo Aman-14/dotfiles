@@ -34,4 +34,6 @@ return {
 	},
 	tsserver = nil,
 	pyright = {},
+	tailwindcss = {},
+	cssls = {},
 }

@@ -55,6 +55,7 @@ return {
 							return utils.root_has_file({ ".eslintrc.js", ".eslintrc.cjs" }) -- only enable if root has .eslintrc.js or .eslintrc.cjs
 						end,
 					}),
+					code_actions.eslint_d,
 					diagnostics.shellcheck,
 					diagnostics.yamllint,
 					code_actions.gitsigns,

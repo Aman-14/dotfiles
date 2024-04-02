@@ -11,6 +11,7 @@ return {
 		a = "Swap next param",
 		A = "Swap previous param",
 		o = { require("telescope.builtin").buffers, "Open Buffer" },
+		oe = { "<cmd>e .env.local<CR>", "Open env local file" },
 		W = { "<cmd>noautocmd w<cr>", "Save without formatting (noautocmd)" },
 		-- TODO: Check it out later
 		r = {
@@ -30,7 +31,7 @@ return {
 			p = { "<cmd>lua require 'gitsigns'.preview_hunk()<cr>", "Preview Hunk" },
 			r = { "<cmd>lua require 'gitsigns'.reset_hunk()<cr>", "Reset Hunk" },
 			j = { "<cmd>lua require 'gitsigns'.next_hunk({navigation_message = false})<cr>", "Next Hunk" },
-			hs = { "<cmd>lua require 'gitsigns'.stage_hunk()<cr>", "Stage Hunk" },
+			s = { "<cmd>lua require 'gitsigns'.stage_hunk()<cr>", "Stage Hunk" },
 			u = {
 				"<cmd>lua require 'gitsigns'.undo_stage_hunk()<cr>",
 				"Undo Stage Hunk",
