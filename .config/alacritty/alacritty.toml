@@ -1,0 +1,55 @@
+[colors]
+# Primary Colors
+[colors.primary]
+foreground = "#ffffff"  # Default: "#d8d8d8"
+background = "#1C1C1C"  # Default: "#181818"
+
+# Cursor Colors
+[colors.cursor]
+text = "#000000"  # Default: "CellBackground"
+cursor = "#38ff9d"  # Default: "CellForeground"
+
+# Search Colors
+[colors.search.matches]
+background = "#38ff9c"  # Default: "#181818"
+
+# Selection Colors
+[colors.selection]
+background = "#38ff9c"  # Default: "CellForeground"
+
+# Normal Colors
+[colors.normal]
+black = "#0b3b61"  # Default: "#181818"
+red = "#ff3a3a"  # Default: "#ac4242"
+green = "#52ffd0"  # Default: "#90a959"
+yellow = "#fff383"  # Default: "#f4bf75"
+blue = "#1376f9"  # Default: "#6a9fb5"
+magenta = "#c792ea"  # Default: "#aa759f"
+cyan = "#ff5ed4"  # Default: "#75b5aa"
+white = "#16fda2"  # Default: "#d8d8d8"
+
+# Bright Colors
+[colors.bright]
+black = "#63686d"  # Default: "#6b6b6b"
+red = "#ff54b0"  # Default: "#c55555"
+green = "#74ffd8"  # Default: "#aac474"
+yellow = "#fcf5ae"  # Default: "#feca88"
+blue = "#388eff"  # Default: "#82b8c8"
+magenta = "#ae81ff"  # Default: "#c28cb8"
+cyan = "#ff6ad7"  # Default: "#93d3c3"
+white = "#60fbbf"  # Default: "#f8f8f8"
+
+
+[font]
+# Normal Font
+normal = { family = "Iosevka", style = "Regular" }  # Default: Varies based on OS
+# Bold Font
+bold = { style = "Bold" }  # Default: Inherits from normal font
+# Italic Font
+italic = { style = "Regular" }  # Default: Inherits from normal font
+
+# Bold Italic Font
+bold_italic = { style = "Bold" }  # Default: Inherits from normal font
+
+# Font Size
+size = 11.25  # Default: 11.25
