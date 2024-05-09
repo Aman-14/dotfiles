@@ -36,4 +36,5 @@ return {
 	pyright = {},
 	tailwindcss = {},
 	cssls = {},
+	solidity_ls_nomicfoundation = {},
 }

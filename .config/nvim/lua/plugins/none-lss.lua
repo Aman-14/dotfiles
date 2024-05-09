@@ -45,6 +45,7 @@ return {
 					formatting.beautysh,
 					formatting.yamlfmt,
 					formatting.black,
+					formatting.forge_fmt,
 					formatting.rustfmt.with({
 						extra_args = { "--edition=2021" },
 					}),
