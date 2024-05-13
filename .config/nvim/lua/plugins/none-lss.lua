@@ -58,7 +58,9 @@ return {
 					}),
 					code_actions.eslint_d,
 					diagnostics.shellcheck,
-					diagnostics.yamllint,
+					diagnostics.yamllint.with({
+						extra_args = { "-d {extends: relaxed, rules: {line-length: {max: 120}}}" },
+					}),
 					code_actions.gitsigns,
 					code_actions.refactoring,
 				},
