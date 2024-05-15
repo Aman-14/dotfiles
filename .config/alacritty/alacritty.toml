@@ -38,4 +38,7 @@ normal = { family = "Iosevka", style = "Regular" }
 bold = { style = "Bold" }  
 italic = { style = "Regular" }  
 bold_italic = { style = "Bold" }  
-size = 11.25  
+size = 20
+
+[window]
+startup_mode = "Maximized"
