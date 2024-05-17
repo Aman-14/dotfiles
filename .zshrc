@@ -7,8 +7,6 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
     source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-export CONDA_SETUP=false
-export PYENV_SETUP=false
 export IS_MACOS=false
 
 # If you come from bash you might have to change your $PATH.
@@ -21,11 +19,7 @@ export ZSH="$HOME/.oh-my-zsh"
 DISABLE_LS_COLORS="true"
 
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git web-search vi-mode)
-
-if $IS_MACOS; then
-    plugins+=(zsh-autosuggestions zsh-syntax-highlighting)
-fi
+plugins=(git web-search vi-mode zsh-autosuggestions zsh-syntax-highlighting)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -35,15 +29,6 @@ export DISABLE_AUTO_TITLE='true'
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-
-
-if $PYENV_SETUP; then
-    # pyenv conf
-    export PYENV_ROOT="$HOME/.pyenv"
-    command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
-    eval "$(pyenv init -)"
-    eval "$(pyenv virtualenv-init -)"
-fi
 
 export PATH=/Users/aman/.local/bin:$PATH
 export PATH=/Users/aman/.gem/ruby/2.6.0/bin:$PATH
@@ -59,6 +44,12 @@ alias uuid="uuidgen | tr '[:upper:]' '[:lower:]'"
 alias git_main_branch='echo production'
 alias redis-cli='docker exec -it redis redis-cli'
 
+# if not macos add pbcopy alias to xclip
+if ! $IS_MACOS; then
+    alias pbcopy='xclip -selection clipboard'
+    alias pbpaste='xclip -selection clipboard -o'
+fi
+
 function f () {
     source ~/scripts/search.sh
 }
@@ -69,20 +60,16 @@ function secret () {
     aws secretsmanager get-secret-value --secret-id "$1" | jq '.SecretString | fromjson'
 }
 
+function stopwatch () {
+  start=$(date +%s)
+  while true; do
+      time="$(($(date +%s) - $start))"
+      printf '%s\r' "$(date -u -d "@$time" +%H:%M:%S)"
+  done
+}
+
 export PATH="/opt/homebrew/opt/libpq/bin:$PATH"
 export XDG_CONFIG_HOME="$HOME/.config"
-
-test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
-
-
-export NVM_DIR="$HOME/.config/nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
-
-autoload -U +X bashcompinit && bashcompinit
-complete -o nospace -C /opt/homebrew/bin/terraform terraform
-
 
 export PATH="/Applications/Sublime Text.app/Contents/SharedSupport/bin:$PATH"
 
@@ -95,22 +82,21 @@ export PATH="$BUN_INSTALL/bin:$PATH"
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
-
-if $CONDA_SETUP; then
-    # code to execute if condition is true
-    __conda_setup="$('/Users/aman/miniconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
-    if [ $? -eq 0 ]; then
-        eval "$__conda_setup"
+__conda_setup="$('$HOME/miniconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+else
+    if [ -f "$HOME/miniconda3/etc/profile.d/conda.sh" ]; then
+        . "$HOME/miniconda3/etc/profile.d/conda.sh"
     else
-        if [ -f "/Users/aman/miniconda3/etc/profile.d/conda.sh" ]; then
-            . "/Users/aman/miniconda3/etc/profile.d/conda.sh"
-        else
-            export PATH="/Users/aman/miniconda3/bin:$PATH"
-        fi
+        export PATH="$HOME/miniconda3/bin:$PATH"
     fi
-    unset __conda_setup
 fi
-
+unset __conda_setup
 # <<< conda initialize <<<
+
+# fnm
+export PATH="$HOME/.local/share/fnm:$PATH"
+eval "`fnm env`"
 
 source ~/powerlevel10k/powerlevel10k.zsh-theme
