@@ -30,8 +30,8 @@ export DISABLE_AUTO_TITLE='true'
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-export PATH=/Users/aman/.local/bin:$PATH
-export PATH=/Users/aman/.gem/ruby/2.6.0/bin:$PATH
+export PATH=$HOME/.local/bin:$PATH
+export PATH=$HOME/.gem/ruby/2.6.0/bin:$PATH
 
 alias vim='nvim'
 alias vi='nvim'
