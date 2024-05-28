@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# install omz
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-
 # install p10k
 git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/powerlevel10k
 # echo 'source ~/powerlevel10k/powerlevel10k.zsh-theme' >>~/.zshrc
@@ -22,6 +19,8 @@ git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:
 
 # install fnm for node
 curl -fsSL https://fnm.vercel.app/install | bash -s -- --skip-shell
+omz reload
+fnm install --lts
 
 # miniconda install
 mkdir -p ~/miniconda3
