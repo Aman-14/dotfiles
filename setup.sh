@@ -21,7 +21,7 @@ git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-m
 git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
 
 # install fnm for node
-curl -fsSL https://fnm.vercel.app/install | bash --skip-shell
+curl -fsSL https://fnm.vercel.app/install | bash -s -- --skip-shell
 
 # miniconda install
 mkdir -p ~/miniconda3
