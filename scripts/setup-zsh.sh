@@ -1,5 +1,7 @@
 #!/bin/bash
 
+export XDG_CONFIG_HOME="$HOME/.config"
+
 # Function to check if zsh is already installed
 check_zsh_installed() {
   if command -v zsh &> /dev/null; then
