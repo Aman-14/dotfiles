@@ -25,6 +25,7 @@ return {
 					"yamlfmt", -- yaml formatter
 					"spell", -- spell checker
 					"black", -- python formatter
+					"gofmt", -- golang formatter
 				},
 			})
 
@@ -46,6 +47,7 @@ return {
 					formatting.yamlfmt,
 					formatting.black,
 					formatting.forge_fmt,
+					formatting.gofmt,
 					formatting.rustfmt.with({
 						extra_args = { "--edition=2021" },
 					}),

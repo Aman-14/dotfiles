@@ -99,4 +99,7 @@ unset __conda_setup
 export PATH="$HOME/.local/share/fnm:$PATH"
 eval "`fnm env`"
 
+# setup golang PATH 
+export PATH=$PATH:/usr/local/go/bin
+
 source ~/powerlevel10k/powerlevel10k.zsh-theme

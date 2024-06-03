@@ -37,4 +37,5 @@ return {
 	tailwindcss = {},
 	cssls = {},
 	solidity_ls_nomicfoundation = {},
+	gopls = {},
 }
