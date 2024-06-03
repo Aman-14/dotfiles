@@ -42,3 +42,7 @@ size = 20
 
 [window]
 startup_mode = "Maximized"
+
+[cursor]
+style = { shape = "Beam", blinking = "On" }
+blink_interval=500
