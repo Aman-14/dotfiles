@@ -16,7 +16,7 @@ return {
 		config = function()
 			local telescope = require("telescope")
 			local actions = require("telescope.actions")
-			local trouble = require("trouble.providers.telescope")
+			-- local trouble = require("trouble.providers.telescope")
 			local icons = require("config.icons")
 
 			vim.api.nvim_create_autocmd("FileType", {
@@ -45,16 +45,15 @@ return {
 					mappings = {
 						i = {
 							["<esc>"] = actions.close,
-							["<C-t>"] = trouble.open_with_trouble,
+							["<C-k>"] = actions.move_selection_previous, -- move to prev result
+							["<C-j>"] = actions.move_selection_next, -- move to next result
 						},
 						n = {
-							["<C-t>"] = trouble.open_with_trouble,
 							["<C-k>"] = actions.move_selection_previous, -- move to prev result
 							["<C-j>"] = actions.move_selection_next, -- move to next result
 							["<C-q>"] = actions.send_selected_to_qflist + actions.open_qflist, -- send selected to quickfixlist
 						},
 					},
-					previewer = false,
 					prompt_prefix = " " .. icons.ui.Telescope .. " ",
 					selection_caret = icons.ui.BoldArrowRight .. " ",
 					file_ignore_patterns = { "node_modules", "package-lock.json" },
@@ -184,7 +183,7 @@ return {
 			telescope.load_extension("ui-select")
 			telescope.load_extension("refactoring")
 			-- telescope.load_extension("dap")
-			telescope.load_extension("frecency")
+			-- telescope.load_extension("frecency")
 		end,
 	},
 }

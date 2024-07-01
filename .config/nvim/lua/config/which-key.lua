@@ -47,8 +47,6 @@ return {
 			s = { vim.lsp.buf.signature_help, "Display Signature Information" },
 			r = { vim.lsp.buf.rename, "Rename all references" },
 			i = { require("telescope.builtin").lsp_implementations, "Implementation" },
-			l = { "<cmd>TroubleToggle document_diagnostics<cr>", "Document Diagnostics (Trouble)" },
-			L = { "<cmd>TroubleToggle workspace_diagnostics<cr>", "Workspace Diagnostics (Trouble)" },
 			w = { require("telescope.builtin").diagnostics, "Diagnostics" },
 			t = { require("telescope").extensions.refactoring.refactors, "Refactor" },
 			c = { require("config.utils").copyFilePathAndLineNumber, "Copy File Path and Line Number" },
@@ -115,5 +113,6 @@ return {
 		gl = "Goto float diagnostics",
 		go = "Goto type definition",
 		gr = "Goto references",
+		E = "<cmd>e<CR>",
 	},
 }

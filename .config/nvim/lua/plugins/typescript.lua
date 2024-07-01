@@ -11,6 +11,7 @@ return {
 				vim.keymap.set("n", "<leader>oi", ":TSToolsOrganizeImports<CR>")
 				vim.keymap.set("n", "<leader>ru", ":TSToolsRemoveUnusedImports<CR>")
 				vim.keymap.set("n", "<leader>rf", ":TSToolsRenameFile<CR>")
+				vim.keymap.set("n", "<leader>ia", ":TSToolsAddMissingImports<CR>")
 			end,
 			capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities),
 			settings = {

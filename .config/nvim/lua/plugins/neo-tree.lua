@@ -52,12 +52,51 @@ return {
 			window = {
 				position = "float",
 				width = 35,
+				mappings = {
+					["c"] = "copy_to_clipboard",
+					["m"] = "cut_to_clipboard",
+					["C"] = function(state)
+						-- get the current node
+						local node = state.tree:get_node()
+						local path = node and node.path or state.path
+						vim.fn.setreg("+", path)
+						print("Copied: " .. path)
+					end,
+					["P"] = function(state)
+						local node = state.tree:get_node()
+						while node and node.type ~= "directory" do
+							local parent_id = node:get_parent_id()
+							if parent_id == nil then
+								-- we must have reached the root node
+								-- this should not happen because the root node is always a directory
+								-- but just in case...
+								node = nil
+								break
+							end
+							node = state.tree:get_node(parent_id)
+						end
+						-- if we somehow didn't find a directory, just use the root node
+						local destinationPath = node and node.path or state.path
+						local srcPath = vim.fn.getreg("+")
+						local cmd = string.format('cp -r "%s" "%s"', srcPath, destinationPath)
+						local result = os.execute(cmd)
+						if result == 0 then
+							print("Copied from '" .. srcPath .. "' to '" .. destinationPath .. "'")
+						else
+							print("Failed to copy from '" .. srcPath .. "' to '" .. destinationPath .. "'")
+						end
+					end,
+				},
 			},
 			filesystem = {
 				use_libuv_file_watcher = true,
 				filtered_items = {
 					hide_dotfiles = false,
 					hide_gitignored = false,
+				},
+				follow_current_file = {
+					enabled = true,
+					leave_dirs_open = true,
 				},
 			},
 			event_handlers = {

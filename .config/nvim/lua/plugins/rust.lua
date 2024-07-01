@@ -1,8 +1,7 @@
 return {
 	{
 		"mrcjkb/rustaceanvim",
-		version = "^3", -- Recommended
-		ft = { "rust" },
+		version = "^4",
 		lazy = false,
 		config = function()
 			vim.g.rustaceanvim = {
@@ -15,7 +14,7 @@ return {
 	-- crates
 	{
 		"saecki/crates.nvim",
-		version = "v0.3.0",
+		tag = "stable",
 		lazy = true,
 		ft = { "rust", "toml" },
 		event = { "BufRead", "BufReadPre", "BufNewFile" },

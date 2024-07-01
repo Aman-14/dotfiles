@@ -38,4 +38,5 @@ return {
 	cssls = {},
 	solidity_ls_nomicfoundation = {},
 	gopls = {},
+  eslint = {}
 }

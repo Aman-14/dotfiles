@@ -79,6 +79,7 @@ return {
 				{ name = "treesitter" },
 				{ name = "crates" },
 				{ name = "tmux" },
+				{ name = "codeium" },
 			},
 		})
 	end,
