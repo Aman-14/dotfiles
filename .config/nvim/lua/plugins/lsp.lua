@@ -40,11 +40,15 @@ return {
 					return
 				end
 
+				local root_dir = server_settings.root_dir
+				server_settings.root_dir = nil
+
 				require("lspconfig")[server_name].setup({
 					capabilities = capabilities,
 					on_attach = require("plugins.lsp.on_attach").on_attach,
 					settings = server_settings,
 					filetypes = server_settings.filetypes,
+					root_dir = root_dir,
 				})
 			end,
 		})

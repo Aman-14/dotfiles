@@ -34,9 +34,19 @@ return {
 	},
 	tsserver = nil,
 	pyright = {},
-	tailwindcss = {},
+	ruff_lsp = {},
+	tailwindcss = {
+		root_dir = require("lspconfig.util").root_pattern(
+			"tailwind.config.js",
+			"tailwind.config.cjs",
+			"tailwind.config.ts",
+			"postcss.config.js",
+			"postcss.config.ts"
+		),
+	},
 	cssls = {},
 	solidity_ls_nomicfoundation = {},
 	gopls = {},
-  eslint = {}
+	eslint = {},
+	taplo = {}, -- lsp for toml
 }
