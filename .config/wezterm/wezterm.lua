@@ -37,6 +37,8 @@ config.window_padding = {
 	top = "0",
 	bottom = "0",
 }
-config.cell_width = 1.01
+config.default_cursor_style = "BlinkingBar"
+config.font_size = 20
+-- config.cell_width = 1.01
 
 return config

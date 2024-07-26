@@ -34,7 +34,7 @@ cyan = "#ff6ad7"
 white = "#60fbbf"  
 
 [font]
-normal = { family = "Iosevka", style = "Regular" }  
+normal = { family = "Iosevka Nerd Font", style = "Regular" }  
 bold = { style = "Bold" }  
 italic = { style = "Regular" }  
 bold_italic = { style = "Bold" }  

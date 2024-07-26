@@ -7,7 +7,7 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
     source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-export IS_MACOS=false
+export IS_MACOS=true
 
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
@@ -61,17 +61,21 @@ function secret () {
 }
 
 function stopwatch () {
-  start=$(date +%s)
-  while true; do
-      time="$(($(date +%s) - $start))"
-      printf '%s\r' "$(date -u -d "@$time" +%H:%M:%S)"
-  done
+    start=$(date +%s)
+    while true; do
+        now=$(date +%s)
+        elapsed=$((now - start))
+        hours=$((elapsed / 3600))
+        minutes=$(( (elapsed / 60) % 60))
+        seconds=$((elapsed % 60))
+        printf '%02d:%02d:%02d\r' $hours $minutes $seconds
+        sleep 1
+    done
 }
 
 export PATH="/opt/homebrew/opt/libpq/bin:$PATH"
 export XDG_CONFIG_HOME="$HOME/.config"
-
-export PATH="/Applications/Sublime Text.app/Contents/SharedSupport/bin:$PATH"
+export PATH="/opt/homebrew/bin:$PATH"
 
 # bun completions
 [ -s "/Users/aman/.bun/_bun" ] && source "/Users/aman/.bun/_bun"
@@ -82,14 +86,14 @@ export PATH="$BUN_INSTALL/bin:$PATH"
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('$HOME/miniconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+__conda_setup="$('/Users/aman/miniconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
 if [ $? -eq 0 ]; then
     eval "$__conda_setup"
 else
-    if [ -f "$HOME/miniconda3/etc/profile.d/conda.sh" ]; then
-        . "$HOME/miniconda3/etc/profile.d/conda.sh"
+    if [ -f "/Users/aman/miniconda3/etc/profile.d/conda.sh" ]; then
+        . "/Users/aman/miniconda3/etc/profile.d/conda.sh"
     else
-        export PATH="$HOME/miniconda3/bin:$PATH"
+        export PATH="/Users/aman/miniconda3/bin:$PATH"
     fi
 fi
 unset __conda_setup
@@ -99,7 +103,8 @@ unset __conda_setup
 export PATH="$HOME/.local/share/fnm:$PATH"
 eval "`fnm env`"
 
-# setup golang PATH 
+# setup golang PATH
 export PATH=$PATH:/usr/local/go/bin
+source <(fzf --zsh)
 
 source ~/powerlevel10k/powerlevel10k.zsh-theme
