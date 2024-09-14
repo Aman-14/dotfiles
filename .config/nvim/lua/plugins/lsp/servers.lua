@@ -33,7 +33,11 @@ return {
 		filetypes = { "yaml" },
 	},
 	tsserver = nil,
-	pyright = {},
+	pyright = {
+		python = {
+			pythonPath = require("config.utils").getPythonPath(),
+		},
+	},
 	ruff_lsp = {},
 	tailwindcss = {
 		root_dir = require("lspconfig.util").root_pattern(
@@ -49,4 +53,5 @@ return {
 	gopls = {},
 	eslint = {},
 	taplo = {}, -- lsp for toml
+	prismals = {},
 }

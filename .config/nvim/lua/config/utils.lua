@@ -80,4 +80,25 @@ M.copyFilePathAndLineNumber = function()
 	end
 end
 
+M.getPythonPath = function()
+	local cwd = vim.fn.getcwd() -- Get current working directory
+	local dot_venv_path = cwd .. "/.venv/bin/python"
+	if vim.fn.filereadable(dot_venv_path) == 1 then
+		return dot_venv_path
+	end
+	local venv_path = cwd .. "/venv/bin/python"
+	if vim.fn.filereadable(venv_path) == 1 then
+		return venv_path
+	end
+
+	-- Check if Conda environment is active
+	local conda_prefix = os.getenv("CONDA_PREFIX")
+	if conda_prefix then
+		return conda_prefix .. "/bin/python" -- Conda python binary path
+	end
+
+	-- Fall back to system python if no venv or conda environment is found
+	return vim.fn.executable("python3") == 1 and "python3" or "python"
+end
+
 return M

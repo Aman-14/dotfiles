@@ -32,13 +32,13 @@ config.hide_tab_bar_if_only_one_tab = true
 
 config.enable_scroll_bar = false
 config.window_padding = {
+	top = "20",
 	left = "0",
 	right = "0",
-	top = "0",
 	bottom = "0",
 }
 config.default_cursor_style = "BlinkingBar"
 config.font_size = 20
--- config.cell_width = 1.01
+config.window_decorations = "RESIZE"
 
 return config

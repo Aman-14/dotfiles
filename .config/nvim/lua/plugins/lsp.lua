@@ -49,6 +49,11 @@ return {
 					settings = server_settings,
 					filetypes = server_settings.filetypes,
 					root_dir = root_dir,
+					on_init = function(client)
+						if client.name == "pyright" then
+							print("Python path: " .. client.config.settings.python.pythonPath)
+						end
+					end,
 				})
 			end,
 		})

@@ -1,6 +1,7 @@
 return {
 	"folke/which-key.nvim",
 	event = "VeryLazy",
+	commit = "0099511294f16b81c696004fa6a403b0ae61f7a0",
 	lazy = true,
 	opts = {
 		plugins = {

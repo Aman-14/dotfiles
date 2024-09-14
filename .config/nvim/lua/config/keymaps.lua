@@ -47,6 +47,7 @@ keymap.set("n", "<leader>sm", ":MaximizerToggle<CR>") -- toggle split window max
 -- fugitive git keymaps
 keymap.set("n", "<leader>gs", ":leftabove vert G<CR>") -- git status
 keymap.set("n", "<leader>gp", [[:Git push -u origin @<CR>]]) -- git push origin
+keymap.set("n", "<leader>gd", ":DiffviewOpen<CR>") -- git push origin
 
 -- restart lsp server (not on youtube nvim video)
 keymap.set("n", "<leader>rs", ":LspRestart<CR>") -- mapping to restart lsp if necessary

@@ -33,7 +33,6 @@ export DISABLE_AUTO_TITLE='true'
 export PATH=$HOME/.local/bin:$PATH
 export PATH=$HOME/.gem/ruby/2.6.0/bin:$PATH
 
-alias vim='nvim'
 alias vi='nvim'
 
 alias genKey="openssl rand -base64 24"
@@ -42,7 +41,7 @@ alias c="clear"
 alias tsnode="ts-node"
 alias uuid="uuidgen | tr '[:upper:]' '[:lower:]'"
 alias git_main_branch='echo production'
-alias redis-cli='docker exec -it redis redis-cli'
+alias redis-cli='docker exec -it redis-stack redis-cli'
 
 # if not macos add pbcopy alias to xclip
 if ! $IS_MACOS; then
@@ -74,6 +73,7 @@ function stopwatch () {
 }
 
 export PATH="/opt/homebrew/opt/libpq/bin:$PATH"
+export PATH="$HOME/scripts/bin:$PATH"
 export XDG_CONFIG_HOME="$HOME/.config"
 export PATH="/opt/homebrew/bin:$PATH"
 
@@ -108,3 +108,5 @@ export PATH=$PATH:/usr/local/go/bin
 source <(fzf --zsh)
 
 source ~/powerlevel10k/powerlevel10k.zsh-theme
+
+. "$HOME/.cargo/env"

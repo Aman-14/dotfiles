@@ -141,15 +141,30 @@ return {
 			require("spectre").setup()
 		end,
 	},
-	-- {
-	-- 	"Exafunction/codeium.nvim",
-	-- 	dependencies = {
-	-- 		"nvim-lua/plenary.nvim",
-	-- 		"hrsh7th/nvim-cmp",
-	-- 	},
-	-- 	config = function()
-	-- 		require("codeium").setup({})
-	-- 	end,
-	-- },
 	"sindrets/diffview.nvim",
+	-- adding jsdoc
+	{
+		"danymat/neogen",
+		config = true,
+		-- Uncomment next line if you want to follow only stable versions
+		-- version = "*"
+	},
+	-- better inputs
+	"stevearc/dressing.nvim",
+	-- Markdown preview
+	{
+		-- Make sure to set this up properly if you have lazy=true
+		"MeanderingProgrammer/render-markdown.nvim",
+		opts = {
+			file_types = { "markdown", "Avante" },
+		},
+		ft = { "markdown", "Avante" },
+	},
+	-- copilot like suggestions
+	{
+		"supermaven-inc/supermaven-nvim",
+		config = function()
+			require("supermaven-nvim").setup({})
+		end,
+	},
 }

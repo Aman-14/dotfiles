@@ -23,6 +23,7 @@ return {
 					"spell", -- spell checker
 					"black", -- python formatter
 					"gofmt", -- golang formatter
+					"xmllint",
 				},
 			})
 
@@ -34,16 +35,20 @@ return {
 
 			null_ls.setup({
 				root_dir = null_ls_utils.root_pattern(".null-ls-root", "Makefile", ".git", "package.json"),
+				debug = false,
 
 				sources = {
 					formatting.stylua,
-					formatting.prettier,
+					formatting.prettier.with({
+						extra_args = { "--ignore-path", "none" },
+					}),
 					formatting.buf,
 					formatting.shfmt,
 					formatting.yamlfmt,
 					formatting.black,
 					formatting.forge_fmt,
 					formatting.gofmt,
+					formatting.xmllint,
 					diagnostics.yamllint.with({
 						extra_args = { "-d {extends: relaxed, rules: {line-length: {max: 120}}}" },
 					}),

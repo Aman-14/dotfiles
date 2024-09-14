@@ -41,6 +41,8 @@ yabai -m rule --add app="^QuickTime Player$" manage=off
 yabai -m rule --add app="^ProtonVPN$" manage=off
 yabai -m rule --add app="^Kit$" manage=off
 yabai -m rule --add app="^krisp$" manage=off
+yabai -m rule --add app="^Preview$" manage=off
+
 
 
 
