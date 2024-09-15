@@ -1,0 +1,56 @@
+#!/bin/bash
+
+# Function to display usage information
+usage() {
+	echo "Usage: $0 <command>"
+	echo "Commands:"
+	echo "  find    - Run a Python script located in a specific directory"
+	echo "  dbpull  - Pull database files from remote server"
+	echo "  dbpush  - Push local database changes to remote server"
+	exit 1
+}
+
+# Function to run the Python script
+run_find_python_script() {
+	python_script="/Users/aman/scripts/update_home_server_dns.py"
+
+	if [ -f "$python_script" ]; then
+		python "$python_script"
+	else
+		echo "Error: Python script not found at $python_script"
+		exit 1
+	fi
+}
+
+# Function to pull database files from remote server
+db_pull() {
+	local user=${2:-aman}
+	rsync -avz -e "ssh" --delete "$user"@homeserver:/home/aman/docker_volumes ~/
+}
+
+# Function to push local database changes to remote server
+db_push() {
+	local user=${2:-aman}
+	rsync -avz -e "ssh" --delete ~/docker_volumes "$user"@homeserver:/home/aman/
+}
+
+# Main script logic
+if [ $# -eq 0 ]; then
+	usage
+fi
+
+case "$1" in
+find)
+	run_find_python_script
+	;;
+dbpull)
+	db_pull "$@"
+	;;
+dbpush)
+	db_push "$@"
+	;;
+*)
+	echo "Error: Invalid command"
+	usage
+	;;
+esac
