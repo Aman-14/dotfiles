@@ -7,14 +7,39 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
     healthcheck:
-      test: echo "try { rs.status() } catch (err) { rs.initiate({_id:'rs0',members:[{_id:0,host:'127.0.0.1:27017'}]}) }" | mongosh --port 27017 --quiet
+      test: |
+        mongosh --host localhost --port 27017 --eval '
+          // Function to check and update the replica set configuration
+          function checkAndUpdateReplicaSet() {
+            let rsStatus = rs.status();
+            let desiredHost = "docker.home.server:27017";
+            print("Replica set configuration:");
+            printjson(rsStatus);
+            print("Desired host: " + desiredHost);
+
+            // Check if the desired host is in the replica set configuration
+            let members = rsStatus.members.map(function(m) { return m.name; });
+            let containsDesiredHost = members.indexOf(desiredHost) !== -1;
+
+            if (!containsDesiredHost) {
+              print("Updating replica set configuration to include " + desiredHost);
+              let cfg = rs.conf();
+              cfg.members[0].host = desiredHost;
+              rs.reconfig(cfg, { force: true });
+            }
+          }
+
+          // Run the check and update function
+          checkAndUpdateReplicaSet();
+        ' --quiet
       interval: 5s
       timeout: 30s
       start_period: 0s
       start_interval: 1s
-      retries: 30
+      retries: 50
     volumes:
       - $HOME/docker_volumes/mongo/data/db:/data/db
+    restart: always
   redis-stack:
     image: redis/redis-stack:latest
     container_name: redis-stack
