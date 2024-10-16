@@ -42,6 +42,7 @@ alias tsnode="ts-node"
 alias uuid="uuidgen | tr '[:upper:]' '[:lower:]'"
 alias git_main_branch='echo production'
 alias redis-cli='docker exec -it redis-stack redis-cli'
+alias hs='homeserver'
 
 # if not macos add pbcopy alias to xclip
 if ! $IS_MACOS; then

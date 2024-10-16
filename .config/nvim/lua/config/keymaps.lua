@@ -20,6 +20,9 @@ keymap.set("x", "P", '"_dP')
 -- save the file with Ctrl + s
 keymap.set("n", "<C-s>", ":w<cr>")
 keymap.set("i", "<C-s>", "<ESC>:w<cr>")
+-- save with command s
+keymap.set("n", "<D-s>", ":w<cr>")
+keymap.set("i", "<D-s>", "<ESC>:w<cr>")
 
 -- increment/decrement numbers
 keymap.set("n", "<leader>+", "<c-a>") -- increment
@@ -44,17 +47,12 @@ keymap.set("v", "<leader>nr", replace_newlines, { noremap = true })
 -- vim-maximizer
 keymap.set("n", "<leader>sm", ":MaximizerToggle<CR>") -- toggle split window maximization
 
--- fugitive git keymaps
-keymap.set("n", "<leader>gs", ":leftabove vert G<CR>") -- git status
-keymap.set("n", "<leader>gp", [[:Git push -u origin @<CR>]]) -- git push origin
-keymap.set("n", "<leader>gd", ":DiffviewOpen<CR>") -- git push origin
-
--- restart lsp server (not on youtube nvim video)
+-- restart lsp server
 keymap.set("n", "<leader>rs", ":LspRestart<CR>") -- mapping to restart lsp if necessary
 
 keymap.set("n", "<leader>ha", function()
 	local harpoon = require("harpoon")
-	harpoon:list():append()
+	harpoon:list():add()
 end) -- add item to list
 
 keymap.set("n", "<leader>hm", function()

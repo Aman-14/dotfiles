@@ -24,14 +24,17 @@ return {
 			"<cmd>:lua vim.cmd('wincmd =')<CR>",
 			"Format windows",
 		},
-		G = {
+		g = {
 			name = "+Git",
 			k = { "<cmd>lua require 'gitsigns'.prev_hunk({navigation_message = false})<cr>", "Prev Hunk" },
-			l = { "<cmd>lua require 'gitsigns'.blame_line()<cr>", "Blame" },
-			p = { "<cmd>lua require 'gitsigns'.preview_hunk()<cr>", "Preview Hunk" },
-			r = { "<cmd>lua require 'gitsigns'.reset_hunk()<cr>", "Reset Hunk" },
 			j = { "<cmd>lua require 'gitsigns'.next_hunk({navigation_message = false})<cr>", "Next Hunk" },
-			s = { "<cmd>lua require 'gitsigns'.stage_hunk()<cr>", "Stage Hunk" },
+			l = { "<cmd>lua require 'gitsigns'.blame_line()<cr>", "Blame" },
+			r = { "<cmd>lua require 'gitsigns'.reset_hunk()<cr>", "Reset Hunk" },
+			s = { ":leftabove vert G<CR>", "Git Status" },
+			d = { ":DiffviewOpen<CR>", "Diff View" },
+			p = { [[:Git push -u origin @<CR>]], "Git Push Origin" },
+			c = { ":DiffviewClose<CR>", "Close Diff View" },
+			h = { "<cmd>lua require 'gitsigns'.stage_hunk()<cr>", "Stage Hunk" },
 			u = {
 				"<cmd>lua require 'gitsigns'.undo_stage_hunk()<cr>",
 				"Undo Stage Hunk",
