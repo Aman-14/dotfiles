@@ -41,4 +41,8 @@ config.default_cursor_style = "BlinkingBar"
 config.font_size = 20
 config.window_decorations = "RESIZE"
 
+-- transparant and blur background
+config.window_background_opacity = 0.85
+config.macos_window_background_blur = 20
+
 return config

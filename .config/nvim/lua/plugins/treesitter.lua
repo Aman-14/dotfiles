@@ -6,6 +6,7 @@ return {
 		event = { "BufReadPost", "BufNewFile" },
 		dependencies = {
 			"nvim-treesitter/nvim-treesitter-textobjects",
+			{ "nushell/tree-sitter-nu", build = ":TSUpdate nu" },
 		},
 		-- opts = function(_, opts)
 		-- 	if type(opts.ensure_installed) == "table" then
