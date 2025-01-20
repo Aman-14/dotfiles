@@ -1,4 +1,4 @@
-directories=("workspace/work-lsc@2" "workspace/work-protostar@1" "workspace/personal@1" "workspace/misc@1" ".config@1" "docker_files" "docker_volumes" "Desktop" "Downloads" "workspace/misc")
+directories=("workspace/work-lsc@2" "workspace/work-protostar@1" "workspace/personal@1" "workspace/misc@1" ".config@1" "docker_files" "docker_volumes" "Desktop" "Downloads" "workspace/misc", "workspace/work-hashnetwork@1")
 all=""
 
 for directory in "${directories[@]}"; do

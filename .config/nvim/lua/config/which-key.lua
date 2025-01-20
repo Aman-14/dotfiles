@@ -11,7 +11,7 @@ return {
 		a = "Swap next param",
 		A = "Swap previous param",
 		o = { require("telescope.builtin").buffers, "Open Buffer" },
-		oe = { "<cmd>e .env.local<CR>", "Open env local file" },
+		oe = { require("config.utils").telescope_env_files, "Open env files" },
 		W = { "<cmd>noautocmd w<cr>", "Save without formatting (noautocmd)" },
 		-- TODO: Check it out later
 		r = {

@@ -10,7 +10,7 @@ fi
 export IS_MACOS=true
 
 # If you come from bash you might have to change your $PATH.
-# export PATH=$HOME/bin:/usr/local/bin:$PATH
+export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
@@ -43,6 +43,8 @@ alias uuid="uuidgen | tr '[:upper:]' '[:lower:]'"
 alias git_main_branch='echo production'
 alias redis-cli='docker exec -it redis-stack redis-cli'
 alias hs='homeserver'
+alias p='pnpm'
+alias otterscan="pm2 serve ~/workspace/misc/otterscan/dist/ --spa --port 3010"
 
 # if not macos add pbcopy alias to xclip
 if ! $IS_MACOS; then
@@ -77,6 +79,7 @@ export PATH="/opt/homebrew/opt/libpq/bin:$PATH"
 export PATH="$HOME/scripts/bin:$PATH"
 export XDG_CONFIG_HOME="$HOME/.config"
 export PATH="/opt/homebrew/bin:$PATH"
+export PATH="$HOME/.mongo_tools/bin:$PATH"
 
 # bun completions
 [ -s "/Users/aman/.bun/_bun" ] && source "/Users/aman/.bun/_bun"
@@ -102,12 +105,12 @@ unset __conda_setup
 
 # fnm
 export PATH="$HOME/.local/share/fnm:$PATH"
-eval "`fnm env`"
+eval "$(fnm env --use-on-cd --log-level quiet --shell zsh)"
 
 # setup golang PATH
 export PATH=$PATH:/usr/local/go/bin
 source <(fzf --zsh)
+. "$HOME/.cargo/env"
 
 source ~/powerlevel10k/powerlevel10k.zsh-theme
 
-. "$HOME/.cargo/env"

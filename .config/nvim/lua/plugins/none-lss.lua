@@ -46,7 +46,7 @@ return {
 					formatting.shfmt,
 					formatting.yamlfmt,
 					formatting.black,
-					formatting.forge_fmt,
+					-- formatting.forge_fmt,
 					formatting.gofmt,
 					formatting.xmllint,
 					diagnostics.yamllint.with({

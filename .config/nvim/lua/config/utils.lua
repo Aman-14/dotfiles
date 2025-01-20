@@ -60,8 +60,7 @@ M.copyFilePathAndLineNumber = function()
 		local current_repo = vim.fn.systemlist("git remote get-url origin")[1]
 		local current_branch = vim.fn.systemlist("git rev-parse --abbrev-ref HEAD")[1]
 
-		-- Convert Git URL to GitHub web URL format
-		current_repo = current_repo:gsub("git@github.com:", "https://github.com/")
+		current_repo = string.gsub(current_repo, "git@github%.com%-[%w-]+:(.*)", "https://github.com/%1")
 		current_repo = current_repo:gsub("%.git$", "")
 
 		-- Remove leading system path to repository root
@@ -99,6 +98,14 @@ M.getPythonPath = function()
 
 	-- Fall back to system python if no venv or conda environment is found
 	return vim.fn.executable("python3") == 1 and "python3" or "python"
+end
+
+M.telescope_env_files = function()
+	require("telescope.builtin").find_files({
+		prompt_title = "Find .env Files",
+		find_command = { "fd", ".env*", "-d", "1", "-H", "-I" },
+		hidden = true
+	})
 end
 
 return M
