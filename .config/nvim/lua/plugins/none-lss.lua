@@ -24,6 +24,7 @@ return {
 					"black", -- python formatter
 					"gofmt", -- golang formatter
 					"xmllint",
+					"biome",
 				},
 			})
 
@@ -46,6 +47,7 @@ return {
 					formatting.shfmt,
 					formatting.yamlfmt,
 					formatting.black,
+					-- formatting.biome,
 					-- formatting.forge_fmt,
 					formatting.gofmt,
 					formatting.xmllint,

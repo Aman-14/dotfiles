@@ -8,7 +8,11 @@ return {
 		opts = {
 			provider = "claude",
 			claude = {
-				api_key_name = "cmd:cat /Users/aman/.asta/anthropic", -- the shell command must prefixed with `^cmd:(.*)`
+				api_key_name = "cmd:cat /Users/aman/.asta/anthropic.personal", -- the shell command must prefixed with `^cmd:(.*)`
+			},
+			gemini = {
+				api_key_name = "cmd:cat /Users/aman/.asta/aistudio.google",
+				model = "gemini-2.0-flash",
 			},
 		},
 

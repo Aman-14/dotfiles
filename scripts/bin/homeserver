@@ -8,6 +8,8 @@ usage() {
 	echo "  dbpull  - Pull database files from remote server"
 	echo "  dbpush  - Push local database changes to remote server"
 	echo "  forward - Forward a specified port to the remote server"
+	echo "  sync    - Sync local folder to remote server (with optional watching)"
+	echo "            Usage: $0 sync <local_folder> [remote_path] [--watch]"
 	exit 1
 }
 
@@ -47,6 +49,65 @@ forward_port() {
 	eval "$command"
 }
 
+sync_folder() {
+	if [ $# -lt 2 ]; then
+		echo "Usage: $0 sync <local_folder> [remote_path] [--watch]"
+		exit 1
+	fi
+
+	do_rsync() {
+		local src="$1"
+		local dest="$2"
+		rsync -avz --exclude 'node_modules' --exclude '.next' --exclude '.git' --exclude 'target' --exclude 'dist' --exclude '.venv' "$src/" "$dest"
+	}
+
+	local local_folder=$2
+	local user="aman"
+	local remote_path=""
+	local watch=false
+
+	# Parse remaining arguments
+	shift 2 # Skip past "sync" and local_folder
+	while [ "$#" -gt 0 ]; do
+		case "$1" in
+		--watch)
+			watch=true
+			;;
+		*)
+			if [ -z "$remote_path" ]; then
+				remote_path="$1"
+			fi
+			;;
+		esac
+		shift
+	done
+
+	# Set default remote path if not provided
+	if [ -z "$remote_path" ]; then
+		remote_path="/home/aman/$(basename "$local_folder")"
+	fi
+
+	# Remove trailing slash from paths
+	local_folder=${local_folder%/}
+	remote_path=${remote_path%/}
+
+	local remote_dest="$user@homeserver:$remote_path"
+
+	if [ "$watch" = true ]; then
+		echo "Watching $local_folder for changes and syncing to $remote_dest"
+		echo "Initial sync..."
+		do_rsync "$local_folder" "$remote_dest"
+
+		fswatch -o "$local_folder" | while read; do
+			echo "Change detected. Syncing..."
+			do_rsync "$local_folder" "$remote_dest"
+		done
+	else
+		echo "Syncing $local_folder to $remote_dest"
+		do_rsync "$local_folder" "$remote_dest"
+	fi
+}
+
 case "$1" in
 find)
 	run_find_python_script
@@ -59,6 +120,9 @@ dbpush)
 	;;
 forward)
 	forward_port "$@"
+	;;
+sync)
+	sync_folder "$@"
 	;;
 *)
 	echo "Error: Invalid command"

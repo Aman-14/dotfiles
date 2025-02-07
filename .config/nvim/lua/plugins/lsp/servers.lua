@@ -38,7 +38,7 @@ return {
 			pythonPath = require("config.utils").getPythonPath(),
 		},
 	},
-	ruff_lsp = {},
+	-- ruff_lsp = {},
 	tailwindcss = {
 		root_dir = require("lspconfig.util").root_pattern(
 			"tailwind.config.js",
@@ -52,6 +52,7 @@ return {
 	solidity_ls_nomicfoundation = {},
 	gopls = {},
 	eslint = {},
+	biome = {},
 	taplo = {}, -- lsp for toml
 	prismals = {},
 }
