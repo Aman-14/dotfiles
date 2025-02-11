@@ -51,7 +51,6 @@ return {
 			r = { vim.lsp.buf.rename, "Rename all references" },
 			i = { require("telescope.builtin").lsp_implementations, "Implementation" },
 			w = { require("telescope.builtin").diagnostics, "Diagnostics" },
-			t = { require("telescope").extensions.refactoring.refactors, "Refactor" },
 			c = { require("config.utils").copyFilePathAndLineNumber, "Copy File Path and Line Number" },
 
 			-- W = {

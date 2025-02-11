@@ -1,8 +1,7 @@
 return {
 	{
 		"yetone/avante.nvim",
-		event = "VeryLazy",
-		lazy = false,
+		event = "InsertEnter",
 		version = false, -- set this if you want to always pull the latest change
 
 		opts = {
@@ -13,6 +12,14 @@ return {
 			gemini = {
 				api_key_name = "cmd:cat /Users/aman/.asta/aistudio.google",
 				model = "gemini-2.0-flash",
+			},
+			vendors = {
+				openrouter = {
+					endpoint = "https://openrouter.ai/api/v1",
+					__inherited_from = "openai",
+					api_key_name = "cmd:cat /Users/aman/.asta/openrouter",
+					model = "qwen/qwen-2.5-coder-32b-instruct",
+				},
 			},
 		},
 

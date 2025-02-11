@@ -5,7 +5,6 @@ return {
 		{ "williamboman/mason.nvim", config = true },
 		"williamboman/mason-lspconfig.nvim",
 		{ "j-hui/fidget.nvim", opts = {} },
-		"folke/neodev.nvim",
 		{ "hrsh7th/cmp-nvim-lsp" },
 		"b0o/schemastore.nvim",
 	},
@@ -24,8 +23,6 @@ return {
 			ensure_installed = vim.tbl_keys(require("plugins.lsp.servers")),
 		})
 		require("lspconfig.ui.windows").default_options.border = "single"
-
-		require("neodev").setup()
 
 		local capabilities = vim.lsp.protocol.make_client_capabilities()
 		capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)

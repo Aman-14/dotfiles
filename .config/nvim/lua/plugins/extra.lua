@@ -23,15 +23,6 @@ return {
 			require("nvim-surround").setup()
 		end,
 	},
-	-- Neovim setup for init.lua and plugin development with full signature help, docs and completion for the nvim lua API
-	{
-		"folke/neodev.nvim",
-		config = function()
-			require("neodev").setup({
-				library = { plugins = { "neotest" }, types = true },
-			})
-		end,
-	},
 	-- Simple winbar/statusline plugin that shows your current code context
 	{
 		"SmiteshP/nvim-navic",
@@ -85,30 +76,14 @@ return {
 			require("breadcrumbs").setup()
 		end,
 	},
-	{
-		"ThePrimeagen/refactoring.nvim",
-		dependencies = {
-			{ "nvim-lua/plenary.nvim" },
-			{ "nvim-treesitter/nvim-treesitter" },
-		},
-		config = function()
-			require("refactoring").setup({})
-		end,
-	},
 	-- tmux & split window navigation
 	"christoomey/vim-tmux-navigator",
 
 	-- maximizes and restores current window
 	"szw/vim-maximizer",
-	"mbbill/undotree",
-
 	{
-		"ThePrimeagen/harpoon",
-		branch = "harpoon2",
-		dependencies = { "nvim-lua/plenary.nvim" },
-		config = function()
-			require("harpoon"):setup()
-		end,
+		"mbbill/undotree",
+		cmd = "UndotreeToggle",
 	},
 	-- autopairs for neovim written by lua
 	{
@@ -137,20 +112,17 @@ return {
 	-- find and replace
 	{
 		"nvim-pack/nvim-spectre",
+		event = "InsertEnter",
 		config = function()
 			require("spectre").setup()
 		end,
 	},
-	"sindrets/diffview.nvim",
-	-- adding jsdoc
-	{
-		"danymat/neogen",
-		config = true,
-		-- Uncomment next line if you want to follow only stable versions
-		-- version = "*"
-	},
+	-- "sindrets/diffview.nvim",
 	-- better inputs
-	"stevearc/dressing.nvim",
+	{
+		"stevearc/dressing.nvim",
+		event = "VeryLazy",
+	},
 	-- Markdown preview
 	{
 		-- Make sure to set this up properly if you have lazy=true
@@ -163,42 +135,27 @@ return {
 	-- copilot like suggestions
 	{
 		"supermaven-inc/supermaven-nvim",
+		event = "InsertEnter",
 		config = function()
 			require("supermaven-nvim").setup({})
 		end,
 	},
-
-	-- {
-	-- 	"akinsho/toggleterm.nvim",
-	-- 	config = function()
-	-- 		require("toggleterm").setup({
-	-- 			size = 15,
-	-- 			open_mapping = [[<M-t>]],
-	-- 			hide_numbers = true,
-	-- 			shade_filetypes = {},
-	-- 			shade_terminals = true,
-	-- 			shading_factor = 2,
-	-- 			start_in_insert = true,
-	-- 			insert_mappings = true,
-	-- 			persist_size = true,
-	-- 			direction = "float",
-	-- 			close_on_exit = true,
-	-- 			shell = vim.o.shell,
-	-- 			float_opts = {
-	-- 				border = "curved",
-	-- 				winblend = 0,
-	-- 				highlights = {
-	-- 					border = "Normal",
-	-- 					background = "Normal",
-	-- 				},
-	-- 			},
-	-- 		})
-	-- 	end,
-	-- },
 	{
 		"stevearc/oil.nvim",
 		opts = {},
 		-- Optional dependencies
 		dependencies = { "nvim-tree/nvim-web-devicons" }, -- use if prefer nvim-web-devicons
+		cmd = { "Oil" }, -- Load on Oil command
+	},
+	{
+		"folke/lazydev.nvim",
+		ft = "lua", -- only load on lua files
+		opts = {
+			library = {
+				-- See the configuration section for more details
+				-- Load luvit types when the `vim.uv` word is found
+				{ path = "${3rd}/luv/library", words = { "vim%.uv" } },
+			},
+		},
 	},
 }

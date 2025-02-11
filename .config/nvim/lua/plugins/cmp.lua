@@ -1,35 +1,36 @@
 return {
 	-- Autocompletion
 	"hrsh7th/nvim-cmp",
-	event = "InsertEnter",
+	lazy = true,
+	-- event = "BufRead",
 	dependencies = {
 		-- Snippet Engine & its associated nvim-cmp source
-		"L3MON4D3/LuaSnip",
-		"saadparwaiz1/cmp_luasnip",
+		-- "L3MON4D3/LuaSnip",
+		-- "saadparwaiz1/cmp_luasnip",
 
 		-- Adds LSP completion capabilities
 		"hrsh7th/cmp-nvim-lsp",
 		"hrsh7th/cmp-path",
 
 		-- Adds a number of user-friendly snippets
-		"rafamadriz/friendly-snippets",
+		-- "rafamadriz/friendly-snippets",
 
 		-- Adds vscode-like pictograms
 		"onsails/lspkind.nvim",
 	},
 	config = function()
 		local cmp = require("cmp")
-		local luasnip = require("luasnip")
+		-- local luasnip = require("luasnip")
 
-		require("luasnip.loaders.from_vscode").lazy_load()
-		luasnip.config.setup({})
+		-- require("luasnip.loaders.from_vscode").lazy_load()
+		-- luasnip.config.setup({})
 
 		cmp.setup({
-			snippet = {
-				expand = function(args)
-					luasnip.lsp_expand(args.body)
-				end,
-			},
+			-- snippet = {
+			-- 	expand = function(args)
+			-- 		luasnip.lsp_expand(args.body)
+			-- 	end,
+			-- },
 			completion = {
 				completeopt = "menu,menuone,noinsert",
 			},
@@ -44,33 +45,16 @@ return {
 					behavior = cmp.ConfirmBehavior.Replace,
 					select = true,
 				}),
-				-- 	["<Tab>"] = cmp.mapping(function(fallback)
-				-- 		if cmp.visible() then
-				-- 			cmp.select_next_item()
-				-- 		elseif luasnip.expand_or_locally_jumpable() then
-				-- 			luasnip.expand_or_jump()
-				-- 		else
-				-- 			fallback()
-				-- 		end
-				-- 	end, { "i", "s" }),
-				-- 	["<S-Tab>"] = cmp.mapping(function(fallback)
-				-- 		if cmp.visible() then
-				-- 			cmp.select_prev_item()
-				-- 		elseif luasnip.locally_jumpable(-1) then
-				-- 			luasnip.jump(-1)
-				-- 		else
-				-- 			fallback()
-				-- 		end
-				-- 	end, { "i", "s" }),
 			}),
 			window = {
 				completion = cmp.config.window.bordered(),
 				documentation = cmp.config.window.bordered(),
 			},
 			sources = {
+				{ name = "lazydev", group_index = 0 },
 				{ name = "nvim_lsp" },
 				{ name = "nvim_lua" },
-				{ name = "luasnip" },
+				-- { name = "luasnip" },
 				{ name = "buffer" },
 				{ name = "path" },
 				{ name = "calc" },
@@ -78,7 +62,6 @@ return {
 				{ name = "treesitter" },
 				{ name = "crates" },
 				{ name = "tmux" },
-				-- { name = "codeium" },
 			},
 		})
 	end,

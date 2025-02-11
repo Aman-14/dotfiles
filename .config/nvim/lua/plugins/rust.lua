@@ -1,8 +1,8 @@
 return {
 	{
 		"mrcjkb/rustaceanvim",
+		ft = { "rust" },
 		version = "^4",
-		lazy = false,
 		config = function()
 			vim.g.rustaceanvim = {
 				server = {
@@ -15,7 +15,6 @@ return {
 	{
 		"saecki/crates.nvim",
 		tag = "stable",
-		lazy = true,
 		ft = { "rust", "toml" },
 		event = { "BufRead", "BufReadPre", "BufNewFile" },
 		dependencies = { "nvim-lua/plenary.nvim" },

@@ -3,7 +3,7 @@ return {
 	"tpope/vim-rhubarb",
 	{
 		"lewis6991/gitsigns.nvim",
-		lazy = false,
+		event = "InsertEnter",
 		commit = "47c8e3e571376b24de62408fd0c9d12f0a9fc0a3",
 		config = function()
 			local icons = require("config.icons")
