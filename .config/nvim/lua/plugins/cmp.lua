@@ -1,20 +1,14 @@
 return {
 	{
 		"saghen/blink.cmp",
-		enabled = false,
+		enabled = true,
 		-- optional: provides snippets for the snippet source
 		dependencies = {
 			"rafamadriz/friendly-snippets",
 			"onsails/lspkind.nvim",
 		},
 
-		-- use a release tag to download pre-built binaries
 		version = "*",
-		-- AND/OR build from source, requires nightly: https://rust-lang.github.io/rustup/concepts/channels.html#working-with-nightly-rust
-		-- build = 'cargo build --release',
-		-- If you use nix, you can build from source using latest nightly rust with:
-		-- build = 'nix run .#build-plugin',
-
 		---@module 'blink.cmp'
 		---@type blink.cmp.Config
 		opts = {
@@ -24,19 +18,12 @@ return {
 						-- Menu is auto shown only when searching
 						return ctx.mode ~= "cmdline" or vim.tbl_contains({ "/", "?" }, vim.fn.getcmdtype())
 					end,
-					-- draw = {
-					-- 	components = {
-					-- 		kind_icon = {
-					-- 			ellipsis = false,
-					-- 			text = function(ctx)
-					-- 				print("ctx.kind", ctx.kind)
-					-- 				return require("lspkind").symbolic(ctx.kind, {
-					-- 					mode = "symbol",
-					-- 				})
-					-- 			end,
-					-- 		},
-					-- 	},
-					-- },
+					draw = {
+						columns = {
+							{ "label", "label_description", gap = 1 },
+							{ "kind_icon", "kind", gap = 1 },
+						},
+					},
 				},
 				accept = {
 					auto_brackets = {
@@ -46,6 +33,10 @@ return {
 							blocked_filetypes = { "typescriptreact", "javascriptreact", "vue" },
 						},
 					},
+				},
+				documentation = {
+					auto_show = true,
+					auto_show_delay_ms = 300,
 				},
 			},
 			-- 'default' for mappings similar to built-in completion
@@ -123,74 +114,5 @@ return {
 			},
 		},
 		opts_extend = { "sources.default" },
-	},
-	{
-		-- Autocompletion
-		"hrsh7th/nvim-cmp",
-		enabled = true,
-		lazy = true,
-		-- event = "BufRead",
-		dependencies = {
-			-- Snippet Engine & its associated nvim-cmp source
-			-- "L3MON4D3/LuaSnip",
-			-- "saadparwaiz1/cmp_luasnip",
-
-			-- Adds LSP completion capabilities
-			"hrsh7th/cmp-nvim-lsp",
-			"hrsh7th/cmp-path",
-
-			-- Adds a number of user-friendly snippets
-			-- "rafamadriz/friendly-snippets",
-
-			-- Adds vscode-like pictograms
-			"onsails/lspkind.nvim",
-		},
-		config = function()
-			local cmp = require("cmp")
-			-- local luasnip = require("luasnip")
-
-			-- require("luasnip.loaders.from_vscode").lazy_load()
-			-- luasnip.config.setup({})
-
-			cmp.setup({
-				-- snippet = {
-				-- 	expand = function(args)
-				-- 		luasnip.lsp_expand(args.body)
-				-- 	end,
-				-- },
-				completion = {
-					completeopt = "menu,menuone,noinsert",
-				},
-				mapping = cmp.mapping.preset.insert({
-					["<C-k>"] = cmp.mapping.select_prev_item(), -- previous suggestion
-					["<C-j>"] = cmp.mapping.select_next_item(), -- next suggestion
-					["<C-b>"] = cmp.mapping.scroll_docs(-4),
-					["<C-f>"] = cmp.mapping.scroll_docs(4),
-					["<C-Space>"] = cmp.mapping.complete(), -- show completion suggestions
-					["<C-e>"] = cmp.mapping.abort(), -- close completion window
-					["<CR>"] = cmp.mapping.confirm({
-						behavior = cmp.ConfirmBehavior.Replace,
-						select = true,
-					}),
-				}),
-				window = {
-					completion = cmp.config.window.bordered(),
-					documentation = cmp.config.window.bordered(),
-				},
-				sources = {
-					{ name = "lazydev", group_index = 0 },
-					{ name = "nvim_lsp" },
-					{ name = "nvim_lua" },
-					-- { name = "luasnip" },
-					{ name = "buffer" },
-					{ name = "path" },
-					{ name = "calc" },
-					{ name = "emoji" },
-					{ name = "treesitter" },
-					{ name = "crates" },
-					{ name = "tmux" },
-				},
-			})
-		end,
 	},
 }
