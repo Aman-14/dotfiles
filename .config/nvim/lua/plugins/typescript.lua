@@ -13,7 +13,7 @@ return {
 				vim.keymap.set("n", "<leader>rf", ":TSToolsRenameFile<CR>")
 				vim.keymap.set("n", "<leader>ia", ":TSToolsAddMissingImports<CR>")
 			end,
-			capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities),
+			capabilities = require("blink.cmp").get_lsp_capabilities(capabilities),
 			settings = {
 				separate_diagnostic_server = true,
 				expose_as_code_action = "all",

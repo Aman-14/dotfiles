@@ -5,7 +5,7 @@ return {
 		{ "williamboman/mason.nvim", config = true },
 		"williamboman/mason-lspconfig.nvim",
 		{ "j-hui/fidget.nvim", opts = {} },
-		{ "hrsh7th/cmp-nvim-lsp" },
+		"saghen/blink.cmp",
 		"b0o/schemastore.nvim",
 	},
 	config = function()
@@ -25,7 +25,8 @@ return {
 		require("lspconfig.ui.windows").default_options.border = "single"
 
 		local capabilities = vim.lsp.protocol.make_client_capabilities()
-		capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
+		capabilities = require("blink.cmp").get_lsp_capabilities(capabilities)
+		-- capabilities = require("nvim-cmp").getj
 
 		local mason_lspconfig = require("mason-lspconfig")
 
