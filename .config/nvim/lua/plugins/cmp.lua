@@ -5,7 +5,6 @@ return {
 		-- optional: provides snippets for the snippet source
 		dependencies = {
 			"rafamadriz/friendly-snippets",
-			"onsails/lspkind.nvim",
 		},
 
 		version = "*",
