@@ -20,6 +20,7 @@ DISABLE_LS_COLORS="true"
 
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(git web-search vi-mode zsh-autosuggestions zsh-syntax-highlighting)
+# zsh-autocomplete
 
 source $ZSH/oh-my-zsh.sh
 
@@ -45,6 +46,9 @@ alias redis-cli='docker exec -it redis-stack redis-cli'
 alias hs='homeserver'
 alias p='pnpm'
 alias otterscan="pm2 serve ~/workspace/misc/otterscan/dist/ --spa --port 3010"
+alias ls='eza --icons=auto'
+alias l="eza --icons=auto --long"
+alias ht='npx hardhat'
 
 # if not macos add pbcopy alias to xclip
 if ! $IS_MACOS; then
@@ -107,10 +111,43 @@ unset __conda_setup
 export PATH="$HOME/.local/share/fnm:$PATH"
 eval "$(fnm env --use-on-cd --log-level quiet --shell zsh)"
 
-# setup golang PATH
-export PATH=$PATH:/usr/local/go/bin
+# fzf config ---------------------------------------------------------
+# Base fd command that excludes common directories
+export FZF_EXCLUDE="--exclude .git --exclude node_modules --exclude Library --exclude Applications --exclude Downloads --exclude Documents --exclude Pictures --exclude Music --exclude Movies --exclude '*.app'"
+# CTRL-T - Paste the selected files and directories onto the command-line
+export FZF_CTRL_T_COMMAND="fd --type f --type d --follow $FZF_EXCLUDE"
+# ALT-C - CD into the selected directory
+export FZF_ALT_C_COMMAND="fd --type d --follow $FZF_EXCLUDE"
+# Functions used for shell completion
+_fzf_compgen_path() {
+  sh -c "fd --follow $FZF_EXCLUDE . '$1'"
+}
+_fzf_compgen_dir() {
+  sh -c "fd --type d --follow $FZF_EXCLUDE . '$1'"
+}
+# Default options
+export FZF_DEFAULT_OPTS="
+  --height 40% 
+  --layout=reverse 
+  --border 
+  --info=inline
+  --preview='([[ -f {} ]] && (bat --style=numbers --color=always {} || cat {})) || ([[ -d {} ]] && (tree -C {} | less)) || echo {} 2> /dev/null | head -200'
+  --preview-window='right:60%'
+  --bind='ctrl-/:toggle-preview'
+"
+# Options specific to CTRL-T
+export FZF_CTRL_T_OPTS="
+  --preview='([[ -f {} ]] && (bat --style=numbers --color=always {} || cat {})) || ([[ -d {} ]] && (tree -C {} | less)) || echo {} 2> /dev/null | head -200'
+  --preview-window='right:60%'
+"
+# Options specific to ALT-C
+export FZF_ALT_C_OPTS="
+  --preview 'tree -C {} | head -200'
+  --preview-window='right:60%'
+"
 source <(fzf --zsh)
+# fzf config ---------------------------------------------------------
+
 . "$HOME/.cargo/env"
 
 source ~/powerlevel10k/powerlevel10k.zsh-theme
-

@@ -1,5 +1,35 @@
 local M = {}
 
+-- Get the GitHub URL for the current file and line
+local function get_git_origin()
+	local current_file = vim.fn.expand("%:p")
+	local current_line = vim.fn.line(".")
+	local is_git_repo = vim.fn.system("git rev-parse --is-inside-work-tree"):match("true")
+
+	if not is_git_repo then
+		return
+	end
+
+	local current_repo = vim.fn.systemlist("git remote get-url origin")[1]
+	local current_branch = vim.fn.systemlist("git rev-parse --abbrev-ref HEAD")[1]
+
+	-- Handle different GitHub URL formats
+	current_repo = string.gsub(current_repo, "git@github%.com%-[%w-]+:(.*)", "https://github.com/%1")
+	current_repo = string.gsub(current_repo, "git@github%.com:(.*)", "https://github.com/%1")
+	current_repo = current_repo:gsub("%.git$", "")
+
+	-- Remove leading system path to repository root
+	local repo_root = vim.fn.systemlist("git rev-parse --show-toplevel")[1]
+	if repo_root then
+		current_file = current_file:sub(#repo_root + 2)
+	end
+
+	return {
+		full_url = string.format("%s/blob/%s/%s#L%s", current_repo, current_branch, current_file, current_line),
+		url = string.format("%s/blob/%s", current_repo, current_branch),
+	}
+end
+
 M.telescope_git_or_file = function()
 	local path = vim.fn.expand("%:p:h")
 	local git_dir = vim.fn.finddir(".git", path .. ";")
@@ -51,32 +81,27 @@ M.toggle_go_test = function()
 end
 
 -- Copy the current file path and line number to the clipboard, use GitHub URL if in a Git repository
-M.copyFilePathAndLineNumber = function()
-	local current_file = vim.fn.expand("%:p")
-	local current_line = vim.fn.line(".")
-	local is_git_repo = vim.fn.system("git rev-parse --is-inside-work-tree"):match("true")
-
-	if is_git_repo then
-		local current_repo = vim.fn.systemlist("git remote get-url origin")[1]
-		local current_branch = vim.fn.systemlist("git rev-parse --abbrev-ref HEAD")[1]
-
-		current_repo = string.gsub(current_repo, "git@github%.com%-[%w-]+:(.*)", "https://github.com/%1")
-		current_repo = current_repo:gsub("%.git$", "")
-
-		-- Remove leading system path to repository root
-		local repo_root = vim.fn.systemlist("git rev-parse --show-toplevel")[1]
-		if repo_root then
-			current_file = current_file:sub(#repo_root + 2)
-		end
-
-		local url = string.format("%s/blob/%s/%s#L%s", current_repo, current_branch, current_file, current_line)
-		vim.fn.setreg("+", url)
-		print("Copied to clipboard: " .. url)
-	else
-		-- If not in a Git directory, copy the full file path
-		vim.fn.setreg("+", current_file .. "#L" .. current_line)
-		print("Copied full path to clipboard: " .. current_file .. "#L" .. current_line)
+M.gitOriginUrlPath = function()
+	local result = get_git_origin()
+	if not result then
+		print("Not in a Git repository")
+		return
 	end
+	vim.fn.setreg("+", result.full_url)
+	print("Copied to clipboard: " .. result.url)
+end
+
+-- Open the current file in GitHub (or file path if not in git repo)
+M.openGitOrigin = function()
+	local result = get_git_origin()
+	if not result then
+		print("Not in a Git repository")
+		return
+	end
+	-- Use xdg-open on Linux, open on macOS
+	local open_cmd = vim.fn.has("mac") == 1 and "open" or "xdg-open"
+	vim.fn.system(string.format("%s '%s'", open_cmd, result.url))
+	print("Opened in browser: " .. result.url)
 end
 
 M.getPythonPath = function()
@@ -104,7 +129,7 @@ M.telescope_env_files = function()
 	require("telescope.builtin").find_files({
 		prompt_title = "Find .env Files",
 		find_command = { "fd", ".env*", "-d", "1", "-H", "-I" },
-		hidden = true
+		hidden = true,
 	})
 end
 

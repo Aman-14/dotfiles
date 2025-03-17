@@ -5,7 +5,7 @@ return {
 		version = false, -- set this if you want to always pull the latest change
 
 		opts = {
-			provider = "claude",
+			provider = "openrouter-sonnet-3.5",
 			claude = {
 				api_key_name = "cmd:cat /Users/aman/.asta/anthropic.personal", -- the shell command must prefixed with `^cmd:(.*)`
 			},
@@ -14,11 +14,37 @@ return {
 				model = "gemini-2.0-flash",
 			},
 			vendors = {
-				openrouter = {
+				["openrouter-sonnet-3.5"] = {
 					endpoint = "https://openrouter.ai/api/v1",
 					__inherited_from = "openai",
 					api_key_name = "cmd:cat /Users/aman/.asta/openrouter",
-					model = "qwen/qwen-2.5-coder-32b-instruct",
+					-- model = "anthropic/claude-3.7-sonnet:beta",
+					model = "anthropic/claude-3.5-sonnet",
+					-- model = "openai/chatgpt-4o-latest",
+				},
+				["openrouter-sonnet-3.7"] = {
+					endpoint = "https://openrouter.ai/api/v1",
+					__inherited_from = "openai",
+					api_key_name = "cmd:cat /Users/aman/.asta/openrouter",
+					model = "anthropic/claude-3.7-sonnet:beta",
+				},
+				["openrouter-o3-mini"] = {
+					endpoint = "https://openrouter.ai/api/v1",
+					__inherited_from = "openai",
+					api_key_name = "cmd:cat /Users/aman/.asta/openrouter",
+					model = "openai/o3-mini",
+				},
+			},
+			web_search_engine = {
+				provider = "google",
+			},
+			file_selector = {
+				provider = "telescope",
+				provider_opts = {
+					layout_config = {
+						width = 0.4, -- 40%
+						height = 0.4,
+					},
 				},
 			},
 		},

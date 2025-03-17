@@ -39,7 +39,7 @@ return {
 				"<cmd>lua require 'gitsigns'.undo_stage_hunk()<cr>",
 				"Undo Stage Hunk",
 			},
-			o = { require("telescope.builtin").git_status, "Open changed file" },
+			o = { require("config.utils").openGitOrigin, "Open url in browser" },
 			b = { require("telescope.builtin").git_branches, "Checkout branch" },
 			U = { ":UndotreeToggle<CR>", "Toggle UndoTree" },
 		},
@@ -51,7 +51,7 @@ return {
 			r = { vim.lsp.buf.rename, "Rename all references" },
 			i = { require("telescope.builtin").lsp_implementations, "Implementation" },
 			w = { require("telescope.builtin").diagnostics, "Diagnostics" },
-			c = { require("config.utils").copyFilePathAndLineNumber, "Copy File Path and Line Number" },
+			c = { require("config.utils").gitOriginUrlPath, "Copy File Path and Line Number" },
 
 			-- W = {
 			-- 	name = "+Workspace",
