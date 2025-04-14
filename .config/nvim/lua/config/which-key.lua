@@ -10,8 +10,11 @@ return {
 		v = "Go to definition in a split",
 		a = "Swap next param",
 		A = "Swap previous param",
-		o = { require("telescope.builtin").buffers, "Open Buffer" },
-		oe = { require("config.utils").telescope_env_files, "Open env files" },
+		-- o = { require("telescope.builtin").buffers, "Open Buffer" },
+		o = {
+			e = { require("config.utils").telescope_env_files, "Open env files" },
+			i = { require("config.utils").organizeImports, "Organize Imports" },
+		},
 		W = { "<cmd>noautocmd w<cr>", "Save without formatting (noautocmd)" },
 		-- TODO: Check it out later
 		r = {
@@ -79,6 +82,7 @@ return {
 			S = { "<cmd>Telescope git_stash<cr>", "Git stash" },
 			e = { "<cmd>Telescope frecency<cr>", "Frecency" },
 			b = { "<cmd>Telescope buffers<cr>", "Buffers" },
+			p = { require("config.utils").addFilesToPromptFile, "Add files to prompt" },
 			-- d = {
 			--   name = "+DAP",
 			--   c = { "<cmd>Telescope dap commands<cr>", "Dap Commands" },

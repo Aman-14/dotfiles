@@ -21,7 +21,6 @@ return {
 					"shfmt", -- shell formatter
 					"yamlfmt", -- yaml formatter
 					"spell", -- spell checker
-					"black", -- python formatter
 					"gofmt", -- golang formatter
 					"xmllint",
 					"biome",
@@ -46,7 +45,6 @@ return {
 					formatting.buf,
 					formatting.shfmt,
 					formatting.yamlfmt,
-					formatting.black,
 					-- formatting.biome,
 					-- formatting.forge_fmt,
 					formatting.gofmt,

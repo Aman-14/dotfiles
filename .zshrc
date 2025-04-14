@@ -47,7 +47,7 @@ alias hs='homeserver'
 alias p='pnpm'
 alias otterscan="pm2 serve ~/workspace/misc/otterscan/dist/ --spa --port 3010"
 alias ls='eza --icons=auto'
-alias l="eza --icons=auto --long"
+alias l="eza --icons=auto --long -a"
 alias ht='npx hardhat'
 
 # if not macos add pbcopy alias to xclip
@@ -84,9 +84,6 @@ export PATH="$HOME/scripts/bin:$PATH"
 export XDG_CONFIG_HOME="$HOME/.config"
 export PATH="/opt/homebrew/bin:$PATH"
 export PATH="$HOME/.mongo_tools/bin:$PATH"
-
-# bun completions
-[ -s "/Users/aman/.bun/_bun" ] && source "/Users/aman/.bun/_bun"
 
 # bun
 export BUN_INSTALL="$HOME/.bun"
@@ -151,3 +148,9 @@ source <(fzf --zsh)
 . "$HOME/.cargo/env"
 
 source ~/powerlevel10k/powerlevel10k.zsh-theme
+
+# Added by Windsurf
+export PATH="/Users/aman/.codeium/windsurf/bin:$PATH"
+
+# Added by Windsurf
+export PATH="/Users/aman/.codeium/windsurf/bin:$PATH"

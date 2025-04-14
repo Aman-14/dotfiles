@@ -5,13 +5,14 @@ return {
 		version = false, -- set this if you want to always pull the latest change
 
 		opts = {
-			provider = "openrouter-sonnet-3.5",
+			-- provider = "openrouter-sonnet-3.5",
+			provider = "gemini",
 			claude = {
 				api_key_name = "cmd:cat /Users/aman/.asta/anthropic.personal", -- the shell command must prefixed with `^cmd:(.*)`
 			},
 			gemini = {
 				api_key_name = "cmd:cat /Users/aman/.asta/aistudio.google",
-				model = "gemini-2.0-flash",
+				model = "gemini-2.5-pro-exp-03-25",
 			},
 			vendors = {
 				["openrouter-sonnet-3.5"] = {

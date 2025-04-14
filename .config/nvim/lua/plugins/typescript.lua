@@ -8,7 +8,7 @@ return {
 		require("typescript-tools").setup({
 			on_attach = function()
 				require("plugins.lsp.on_attach").on_attach()
-				vim.keymap.set("n", "<leader>oi", ":TSToolsOrganizeImports<CR>")
+				-- vim.keymap.set("n", "<leader>oi", ":TSToolsOrganizeImports<CR>") moved to utils
 				vim.keymap.set("n", "<leader>ru", ":TSToolsRemoveUnusedImports<CR>")
 				vim.keymap.set("n", "<leader>rf", ":TSToolsRenameFile<CR>")
 				vim.keymap.set("n", "<leader>ia", ":TSToolsAddMissingImports<CR>")

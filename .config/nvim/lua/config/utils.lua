@@ -100,8 +100,8 @@ M.openGitOrigin = function()
 	end
 	-- Use xdg-open on Linux, open on macOS
 	local open_cmd = vim.fn.has("mac") == 1 and "open" or "xdg-open"
-	vim.fn.system(string.format("%s '%s'", open_cmd, result.url))
-	print("Opened in browser: " .. result.url)
+	vim.fn.system(string.format("%s '%s'", open_cmd, result.full_url))
+	print("Opened in browser: " .. result.full_url)
 end
 
 M.getPythonPath = function()
@@ -130,6 +130,102 @@ M.telescope_env_files = function()
 		prompt_title = "Find .env Files",
 		find_command = { "fd", ".env*", "-d", "1", "-H", "-I" },
 		hidden = true,
+	})
+end
+
+M.organizeImports = function()
+	local bufnr = vim.api.nvim_get_current_buf()
+	local filename = vim.api.nvim_buf_get_name(bufnr)
+	local clients = vim.lsp.get_clients({ bufnr = bufnr })
+
+	if filename:match("%.py$") then
+		for _, client in ipairs(clients) do
+			if client.name == "ruff" then
+				-- Run fixAll first
+				vim.lsp.buf.code_action({
+					context = {
+						diagnostics = {},
+						only = { "source.fixAll" },
+					},
+					apply = true,
+				})
+				-- Schedule organizeImports to run after fixAll completes
+				vim.defer_fn(function()
+					vim.lsp.buf.code_action({
+						context = {
+							diagnostics = {},
+							only = { "source.organizeImports" },
+						},
+						apply = true,
+					})
+				end, 100)
+				return
+			end
+		end
+	end
+
+	if filename:match("%.ts$") or filename:match("%.js$") or filename:match("%.tsx$") or filename:match("%.jsx$") then
+		vim.cmd("TSToolsOrganizeImports")
+	end
+end
+
+M.addFilesToPromptFile = function()
+	local actions = require("telescope.actions")
+	local action_state = require("telescope.actions.state")
+
+	require("telescope.builtin").find_files({
+		prompt_title = "Select Files to Add to Prompt",
+		attach_mappings = function(prompt_bufnr, map)
+			actions.select_default:replace(function()
+				-- Get the current picker
+				local current_picker = action_state.get_current_picker(prompt_bufnr)
+				-- Get selections from the current picker
+				local selections = current_picker:get_multi_selection()
+
+				local files_to_process
+				if #selections > 0 then
+					files_to_process = selections
+				else
+					-- If no multi-selection, get the current selection
+					local selection = action_state.get_selected_entry()
+					files_to_process = selection and { selection } or {}
+				end
+
+				if #files_to_process == 0 then
+					print("No files selected.")
+					actions.close(prompt_bufnr)
+					return
+				end
+
+				local combined_content = {}
+				local total_files = #files_to_process
+
+				for i, entry in ipairs(files_to_process) do
+					local file_path = entry.path or entry.value
+					if file_path then
+						local file_name = vim.fn.fnamemodify(file_path, ":t")
+						local file_content_lines = vim.fn.readfile(file_path)
+						if file_content_lines then
+							local separator = string.format("--------- %s (%d/%d) ---------", file_name, i, total_files)
+							table.insert(combined_content, separator)
+							table.insert(combined_content, table.concat(file_content_lines, "\n"))
+						else
+							print("Error reading file: " .. file_path)
+						end
+					end
+				end
+
+				actions.close(prompt_bufnr)
+				if #combined_content > 0 then
+					local final_string = table.concat(combined_content, "\n\n")
+					vim.fn.setreg("+", final_string)
+					print(string.format("Copied content of %d file(s) to clipboard.", total_files))
+				else
+					print("No content generated.")
+				end
+			end)
+			return true
+		end,
 	})
 end
 

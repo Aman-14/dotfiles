@@ -38,7 +38,7 @@ return {
 			pythonPath = require("config.utils").getPythonPath(),
 		},
 	},
-	-- ruff_lsp = {},
+	ruff = {},
 	tailwindcss = {
 		root_dir = require("lspconfig.util").root_pattern(
 			"tailwind.config.js",
