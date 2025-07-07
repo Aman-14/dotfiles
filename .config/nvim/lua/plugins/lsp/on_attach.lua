@@ -1,5 +1,5 @@
 M = {}
-M.on_attach = function(_, bufnr)
+M.on_attach = function(client, bufnr)
 	local nmap = function(keys, func, desc)
 		if desc then
 			desc = "LSP: " .. desc
@@ -20,6 +20,15 @@ M.on_attach = function(_, bufnr)
 	nmap("gD", vim.lsp.buf.declaration, "Goto Declaration")
 
 	nmap("<leader>v", "<cmd>vsplit | lua vim.lsp.buf.definition()<cr>", "Goto Definition in Vertical Split")
+
+	-- Auto-configure Pyright Python path when it attaches
+	-- if client.name == "pyright" then
+	-- 	local python_path = require("config.utils").getPythonPath()
+	-- 	vim.defer_fn(function()
+	-- 		vim.cmd("PyrightSetPythonPath " .. python_path)
+	-- 		print("Auto-configured Pyright with Python path: " .. python_path)
+	-- 	end, 1000) -- Small delay to ensure Pyright is fully initialized
+	-- end
 end
 
 return M

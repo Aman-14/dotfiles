@@ -19,7 +19,7 @@ return {
 					"yamllint", -- yaml linter
 					"buf", -- buf formatter
 					"shfmt", -- shell formatter
-					"yamlfmt", -- yaml formatter
+					-- "yamlfmt", -- yaml formatter
 					"spell", -- spell checker
 					"gofmt", -- golang formatter
 					"xmllint",
@@ -44,7 +44,7 @@ return {
 					}),
 					formatting.buf,
 					formatting.shfmt,
-					formatting.yamlfmt,
+					-- formatting.yamlfmt,
 					-- formatting.biome,
 					-- formatting.forge_fmt,
 					formatting.gofmt,

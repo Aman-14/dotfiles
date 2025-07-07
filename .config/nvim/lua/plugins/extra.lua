@@ -133,11 +133,18 @@ return {
 		ft = { "markdown", "Avante" },
 	},
 	-- copilot like suggestions
+	-- {
+	-- 	"supermaven-inc/supermaven-nvim",
+	-- 	event = "InsertEnter",
+	-- 	config = function()
+	-- 		require("supermaven-nvim").setup({})
+	-- 	end,
+	-- },
 	{
-		"supermaven-inc/supermaven-nvim",
+		"zbirenbaum/copilot.lua",
 		event = "InsertEnter",
 		config = function()
-			require("supermaven-nvim").setup({})
+			require("copilot").setup()
 		end,
 	},
 	{

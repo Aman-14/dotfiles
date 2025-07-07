@@ -8,16 +8,18 @@ return {
 		},
 	},
 	lua_ls = {
-		Lua = {
-			telemetry = { enable = false },
-			diagnostics = {
-				globals = { "vim" },
-			},
-			workspace = {
-				-- make language server aware of runtime files
-				library = {
-					[vim.fn.expand("$VIMRUNTIME/lua")] = true,
-					[vim.fn.stdpath("config") .. "/lua"] = true,
+		settings = {
+			Lua = {
+				telemetry = { enable = false },
+				diagnostics = {
+					globals = { "vim" },
+				},
+				workspace = {
+					-- make language server aware of runtime files
+					library = {
+						[vim.fn.expand("$VIMRUNTIME/lua")] = true,
+						[vim.fn.stdpath("config") .. "/lua"] = true,
+					},
 				},
 			},
 		},
@@ -32,12 +34,14 @@ return {
 		cmd = { "yaml-language-server", "--stdio" },
 		filetypes = { "yaml" },
 	},
-	tsserver = nil,
 	pyright = {
-		python = {
-			pythonPath = require("config.utils").getPythonPath(),
+		settings = {
+			python = {
+				pythonPath = require("config.utils").getPythonPath(),
+			},
 		},
 	},
+	-- ty = {},
 	ruff = {},
 	tailwindcss = {
 		root_dir = require("lspconfig.util").root_pattern(
@@ -45,6 +49,7 @@ return {
 			"tailwind.config.cjs",
 			"tailwind.config.ts",
 			"postcss.config.js",
+			"postcss.config.mjs",
 			"postcss.config.ts"
 		),
 	},
