@@ -9,18 +9,6 @@ return {
 				claude = {
 					api_key_name = "cmd:cat /Users/aman/.asta/anthropic.personal",
 				},
-				copilot_gpt41 = {
-					__inherited_from = "copilot",
-					model = "gpt-4.1",
-				},
-				copilot_sonnet37 = {
-					__inherited_from = "copilot",
-					model = "claude-3.7-sonnet",
-				},
-				copilot_gemini25 = {
-					__inherited_from = "copilot",
-					model = "gemini-2.5-pro",
-				},
 				gemini = {
 					api_key_name = "cmd:cat /Users/aman/.asta/aistudio.google",
 					model = "gemini-2.5-pro-preview-03-25",

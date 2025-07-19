@@ -21,6 +21,7 @@ export PATH="/opt/homebrew/opt/libpq/bin:$PATH"
 export PATH="$HOME/scripts/bin:$PATH"
 export PATH="/opt/homebrew/bin:$PATH"
 export PATH="$HOME/.mongo_tools/bin:$PATH"
+export PATH="/opt/homebrew/opt/ruby/bin:$PATH"
 
 . "$HOME/.cargo/env"
 
@@ -48,6 +49,15 @@ zinit light jeffreytse/zsh-vi-mode
 zinit light zsh-users/zsh-syntax-highlighting
 # Auto suggestions
 zinit light zsh-users/zsh-autosuggestions
+# Auto complete
+# zinit light marlonrichert/zsh-autocomplete
+
+# completions
+autoload -Uz compinit
+compinit
+export CARAPACE_BRIDGES='zsh,fish,bash,inshellisense' # optional
+zstyle ':completion:*' format $'\e[2;37mCompleting %d\e[m'
+source <(carapace _carapace)
 
 # Preferred editor
 export EDITOR='nvim'
@@ -59,7 +69,6 @@ alias vi='nvim'
 alias genKey="openssl rand -base64 24"
 alias now='date -u +"%Y-%m-%dT%H:%M:%SZ"'
 alias c="clear"
-alias tsnode="ts-node"
 alias uuid="uuidgen | tr '[:upper:]' '[:lower:]'"
 alias git_main_branch='echo production'
 alias redis-cli='docker exec -it redis-stack redis-cli'
@@ -139,5 +148,10 @@ source <(fzf --zsh)
 
 unset CONDA_PREFIX
 
-# eval "$(starship init zsh)"
-# zprof
+# pnpm
+export PNPM_HOME="/Users/aman/Library/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end

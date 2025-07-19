@@ -21,7 +21,9 @@ const server = http.createServer((req, res) => {
   });
 
   req.on("end", () => {
-    console.log("Body:", body);
+    if (body.length < 10000) {
+      console.log("Body:", body);
+    }
 
     // Set CORS headers
     res.setHeader("Access-Control-Allow-Origin", "*");
