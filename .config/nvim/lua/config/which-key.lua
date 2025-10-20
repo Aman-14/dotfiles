@@ -6,7 +6,7 @@ return {
 		h = { ":nohlsearch<CR>", "No Highlight" },
 		p = { require("telescope.builtin").lsp_document_symbols, "Document Symbols" },
 		-- P = { require("telescope.builtin").lsp_dynamic_workspace_symbols, "Workspace Symbols" },
-		f = { "<cmd>Telescope find_files<cr>", "Find Files (Root)" },
+		f = { require("fff").find_files, "FFFind files" },
 		v = "Go to definition in a split",
 		a = "Swap next param",
 		A = "Swap previous param",

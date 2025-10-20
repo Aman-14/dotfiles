@@ -3,70 +3,39 @@ return {
 		"yetone/avante.nvim",
 		event = "InsertEnter",
 		version = false, -- set this if you want to always pull the latest change
-
-		opts = {
-			providers = {
-				claude = {
-					api_key_name = "cmd:cat /Users/aman/.asta/anthropic.personal",
-				},
-				gemini = {
-					api_key_name = "cmd:cat /Users/aman/.asta/aistudio.google",
-					model = "gemini-2.5-pro-preview-03-25",
-				},
-				openai = {
-					endpoint = "https://openrouter.ai/api/v1",
-					api_key_name = "cmd:cat /Users/aman/.asta/openrouter",
-					model = "openai/gpt-4.1",
-				},
-				["openrouter-sonnet-3.5"] = {
-					endpoint = "https://openrouter.ai/api/v1",
-					__inherited_from = "openai",
-					api_key_name = "cmd:cat /Users/aman/.asta/openrouter",
-					model = "anthropic/claude-3.5-sonnet",
-				},
-				["openrouter-sonnet-3.7"] = {
-					endpoint = "https://openrouter.ai/api/v1",
-					__inherited_from = "openai",
-					api_key_name = "cmd:cat /Users/aman/.asta/openrouter",
-					model = "anthropic/claude-3.7-sonnet:beta",
-				},
-				["openrouter-o3-mini"] = {
-					endpoint = "https://openrouter.ai/api/v1",
-					__inherited_from = "openai",
-					api_key_name = "cmd:cat /Users/aman/.asta/openrouter",
-					model = "openai/o3-mini",
-				},
-				["openrouter-gemini-2.5-pro"] = {
-					endpoint = "https://openrouter.ai/api/v1",
-					__inherited_from = "openai",
-					api_key_name = "cmd:cat /Users/aman/.asta/openrouter",
-					model = "google/gemini-2.5-pro-preview-03-25",
-				},
-				groq = {
-					__inherited_from = "openai",
-					api_key_name = "cmd:cat /Users/aman/.asta/groq",
-					endpoint = "https://api.groq.com/openai/v1/",
-					model = "llama-3.3-70b-versatile",
-				},
-			},
-			provider = "copilot_sonnet37",
-			cursor_applying_provider = "groq",
-			behaviour = {
-				enable_cursor_planning_mode = true,
-			},
-			web_search_engine = {
-				provider = "google",
-			},
-			file_selector = {
-				provider = "telescope",
-				provider_opts = {
-					layout_config = {
-						width = 0.4, -- 40%
-						height = 0.4,
+		enabled = false,
+		config = function()
+			local asta = os.getenv("ASTA_DIR")
+			if asta then
+				local k = vim.secure.read(asta .. "/openai")
+				if k then
+					-- vim.env.AVANTE_OPENAI_API_KEY = k
+				end
+			end
+			require("avante").setup({
+				provider = "openai",
+				providers = {
+					openai = {
+						endpoint = "https://api.openai.com/v1",
+						model = "gpt-4.1",
+						timeout = 30000,
+						extra_request_body = {
+							temperature = 0.75,
+							max_tokens = 4096,
+						},
 					},
 				},
-			},
-		},
+				file_selector = {
+					provider = "telescope",
+					provider_opts = {
+						layout_config = {
+							width = 0.4, -- 40%
+							height = 0.4,
+						},
+					},
+				},
+			})
+		end,
 
 		-- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
 		build = "make",

@@ -5,6 +5,9 @@ return {
 	opts = {},
 	config = function()
 		local capabilities = vim.lsp.protocol.make_client_capabilities()
+		local tsserver_filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" }
+
+		-- vim.lsp.enable("vue_ls")
 		require("typescript-tools").setup({
 			on_attach = function()
 				require("plugins.lsp.on_attach").on_attach()
@@ -14,10 +17,12 @@ return {
 				vim.keymap.set("n", "<leader>ia", ":TSToolsAddMissingImports<CR>")
 			end,
 			capabilities = require("blink.cmp").get_lsp_capabilities(capabilities),
+			filetypes = tsserver_filetypes,
 			settings = {
+				tsserver_logs = "verbose",
 				separate_diagnostic_server = true,
+				tsserver_plugins = { "@vue/typescript-plugin" },
 				expose_as_code_action = "all",
-				-- tsserver_plugins = {},
 				tsserver_max_memory = "auto",
 				complete_function_calls = true,
 				include_completions_with_insert_text = true,

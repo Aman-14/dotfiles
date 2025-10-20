@@ -72,8 +72,19 @@ return {
 	-- works with nvim-navic
 	{
 		"LunarVim/breadcrumbs.nvim",
+		event = "BufReadPost", -- Lazy load after buffer is read
 		config = function()
-			require("breadcrumbs").setup()
+			-- Patch breadcrumbs to not set winbar on floating windows
+			local breadcrumbs = require("breadcrumbs")
+			local original_get_winbar = breadcrumbs.get_winbar
+			breadcrumbs.get_winbar = function()
+				-- Skip floating windows
+				if vim.api.nvim_win_get_config(0).relative ~= "" then
+					return
+				end
+				return original_get_winbar()
+			end
+			breadcrumbs.setup()
 		end,
 	},
 	-- tmux & split window navigation
@@ -140,13 +151,13 @@ return {
 	-- 		require("supermaven-nvim").setup({})
 	-- 	end,
 	-- },
-	{
-		"zbirenbaum/copilot.lua",
-		event = "InsertEnter",
-		config = function()
-			require("copilot").setup()
-		end,
-	},
+	-- {
+	-- 	"zbirenbaum/copilot.lua",
+	-- 	event = "InsertEnter",
+	-- 	config = function()
+	-- 		require("copilot").setup()
+	-- 	end,
+	-- },
 	{
 		"stevearc/oil.nvim",
 		opts = {},
@@ -164,5 +175,20 @@ return {
 				{ path = "${3rd}/luv/library", words = { "vim%.uv" } },
 			},
 		},
+	},
+	{
+		"dmtrKovalenko/fff.nvim",
+		build = function()
+			-- this will download prebuild binary or try to use existing rustup toolchain to build from source
+			-- (if you are using lazy you can use gb for rebuilding a plugin if needed)
+			require("fff.download").download_or_build_binary()
+		end,
+		opts = { -- (optional)
+			debug = {
+				enabled = true, -- we expect your collaboration at least during the beta
+				show_scores = true, -- to help us optimize the scoring system, feel free to share your scores!
+			},
+		},
+		lazy = false,
 	},
 }

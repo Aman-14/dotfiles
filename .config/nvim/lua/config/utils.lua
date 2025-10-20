@@ -1,33 +1,101 @@
 local M = {}
 
 -- Get the GitHub URL for the current file and line
-local function get_git_origin()
+local function get_git_origin(callback)
 	local current_file = vim.fn.expand("%:p")
 	local current_line = vim.fn.line(".")
 	local is_git_repo = vim.fn.system("git rev-parse --is-inside-work-tree"):match("true")
 
 	if not is_git_repo then
+		if callback then
+			callback(nil)
+		end
 		return
 	end
 
-	local current_repo = vim.fn.systemlist("git remote get-url origin")[1]
-	local current_branch = vim.fn.systemlist("git rev-parse --abbrev-ref HEAD")[1]
+	-- Get all remotes
+	local remotes = vim.fn.systemlist("git remote")
 
-	-- Handle different GitHub URL formats
-	current_repo = string.gsub(current_repo, "git@github%.com%-[%w-]+:(.*)", "https://github.com/%1")
-	current_repo = string.gsub(current_repo, "git@github%.com:(.*)", "https://github.com/%1")
-	current_repo = current_repo:gsub("%.git$", "")
-
-	-- Remove leading system path to repository root
-	local repo_root = vim.fn.systemlist("git rev-parse --show-toplevel")[1]
-	if repo_root then
-		current_file = current_file:sub(#repo_root + 2)
+	if #remotes == 0 then
+		if callback then
+			callback(nil)
+		end
+		return
 	end
 
-	return {
-		full_url = string.format("%s/blob/%s/%s#L%s", current_repo, current_branch, current_file, current_line),
-		url = string.format("%s/blob/%s", current_repo, current_branch),
-	}
+	local function process_remote(remote_name)
+		local current_repo = vim.fn.systemlist("git remote get-url " .. remote_name)[1]
+		local current_branch = vim.fn.systemlist("git rev-parse --abbrev-ref HEAD")[1]
+
+		-- Handle different GitHub URL formats
+		current_repo = string.gsub(current_repo, "git@github%.com%-[%w-]+:(.*)", "https://github.com/%1")
+		current_repo = string.gsub(current_repo, "git@github%.com:(.*)", "https://github.com/%1")
+		current_repo = current_repo:gsub("%.git$", "")
+
+		-- Remove leading system path to repository root
+		local repo_root = vim.fn.systemlist("git rev-parse --show-toplevel")[1]
+		local relative_file = current_file
+		if repo_root then
+			relative_file = current_file:sub(#repo_root + 2)
+		end
+
+		return {
+			full_url = string.format("%s/blob/%s/%s#L%s", current_repo, current_branch, relative_file, current_line),
+			url = string.format("%s/blob/%s", current_repo, current_branch),
+		}
+	end
+
+	-- If only one remote, use it directly
+	if #remotes == 1 then
+		local result = process_remote(remotes[1])
+		if callback then
+			callback(result)
+		end
+		return result
+	end
+
+	-- Multiple remotes - use telescope to select
+	if callback then
+		local pickers = require("telescope.pickers")
+		local finders = require("telescope.finders")
+		local conf = require("telescope.config").values
+		local actions = require("telescope.actions")
+		local action_state = require("telescope.actions.state")
+
+		pickers
+			.new({}, {
+				prompt_title = "Select Git Remote",
+				finder = finders.new_table({
+					results = remotes,
+					entry_maker = function(remote)
+						local url = vim.fn.systemlist("git remote get-url " .. remote)[1]
+						return {
+							value = remote,
+							display = string.format("%s (%s)", remote, url),
+							ordinal = remote,
+						}
+					end,
+				}),
+				sorter = conf.generic_sorter({}),
+				attach_mappings = function(prompt_bufnr, map)
+					actions.select_default:replace(function()
+						actions.close(prompt_bufnr)
+						local selection = action_state.get_selected_entry()
+						if selection then
+							local result = process_remote(selection.value)
+							callback(result)
+						else
+							callback(nil)
+						end
+					end)
+					return true
+				end,
+			})
+			:find()
+	else
+		-- Synchronous fallback - use first remote (usually origin)
+		return process_remote(remotes[1])
+	end
 end
 
 M.telescope_git_or_file = function()
@@ -82,46 +150,72 @@ end
 
 -- Copy the current file path and line number to the clipboard, use GitHub URL if in a Git repository
 M.gitOriginUrlPath = function()
-	local result = get_git_origin()
-	if not result then
-		print("Not in a Git repository")
-		return
-	end
-	vim.fn.setreg("+", result.full_url)
-	print("Copied to clipboard: " .. result.url)
+	get_git_origin(function(result)
+		if not result then
+			print("Not in a Git repository or no remotes found")
+			return
+		end
+		vim.fn.setreg("+", result.full_url)
+		print("Copied to clipboard: " .. result.url)
+	end)
 end
 
 -- Open the current file in GitHub (or file path if not in git repo)
 M.openGitOrigin = function()
-	local result = get_git_origin()
-	if not result then
-		print("Not in a Git repository")
-		return
-	end
-	-- Use xdg-open on Linux, open on macOS
-	local open_cmd = vim.fn.has("mac") == 1 and "open" or "xdg-open"
-	vim.fn.system(string.format("%s '%s'", open_cmd, result.full_url))
-	print("Opened in browser: " .. result.full_url)
+	get_git_origin(function(result)
+		if not result then
+			print("Not in a Git repository or no remotes found")
+			return
+		end
+		-- Use xdg-open on Linux, open on macOS
+		local open_cmd = vim.fn.has("mac") == 1 and "open" or "xdg-open"
+		vim.fn.system(string.format("%s '%s'", open_cmd, result.full_url))
+		print("Opened in browser: " .. result.full_url)
+	end)
 end
 
 M.getPythonPath = function()
-	local cwd = vim.fn.getcwd() -- Get current working directory
-	local dot_venv_path = cwd .. "/.venv/bin/python"
-	if vim.fn.filereadable(dot_venv_path) == 1 then
-		return dot_venv_path
-	end
-	local venv_path = cwd .. "/venv/bin/python"
-	if vim.fn.filereadable(venv_path) == 1 then
-		return venv_path
+	-- Start from current buffer's directory or fallback to cwd
+	local current_file = vim.fn.expand("%:p")
+	local start_dir = current_file ~= "" and vim.fn.fnamemodify(current_file, ":h") or vim.fn.getcwd()
+
+	-- Get git root to limit search scope
+	local git_root = vim.fn.systemlist("git rev-parse --show-toplevel 2>/dev/null")[1]
+	local search_root = git_root or start_dir
+
+	-- Use fd to find virtual environment directories
+	local fd_cmd =
+		string.format("fd -H -t d -d 5 -I '(^\\.venv$|^venv$)' '%s' -E node_modules 2>/dev/null", search_root)
+	-- print("Running command: " .. fd_cmd)
+	local result = vim.fn.systemlist(fd_cmd)
+	-- print("Output: " .. vim.inspect(result))
+
+	if vim.v.shell_error == 0 and #result > 0 then
+		-- Sort by distance from start_dir (prefer closer matches)
+		table.sort(result, function(a, b)
+			local a_rel = a:gsub("^" .. vim.pesc(start_dir), "")
+			local b_rel = b:gsub("^" .. vim.pesc(start_dir), "")
+			local a_depth = a_rel == "" and 0 or #vim.split(a_rel, "/", { plain = true })
+			local b_depth = b_rel == "" and 0 or #vim.split(b_rel, "/", { plain = true })
+			return a_depth < b_depth
+		end)
+
+		for _, venv_dir in ipairs(result) do
+			local clean_venv_dir = venv_dir:gsub("/$", "")
+			local python_path = clean_venv_dir .. "/bin/python"
+			if vim.fn.filereadable(python_path) == 1 then
+				return python_path
+			end
+		end
 	end
 
 	-- Check if Conda environment is active
 	local conda_prefix = os.getenv("CONDA_PREFIX")
 	if conda_prefix then
-		return conda_prefix .. "/bin/python" -- Conda python binary path
+		return conda_prefix .. "/bin/python"
 	end
 
-	-- Fall back to system python if no venv or conda environment is found
+	-- Fall back to system python
 	return vim.fn.executable("python3") == 1 and "python3" or "python"
 end
 

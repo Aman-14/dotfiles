@@ -1,5 +1,5 @@
 #!/bin/zsh
-# zmodload zsh/zprof
+zmodload zsh/zprof
 
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
@@ -31,6 +31,20 @@ ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
 [ ! -d $ZINIT_HOME/.git ] && git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
 source "${ZINIT_HOME}/zinit.zsh"
 
+# History settings for proper sync across tabs
+setopt SHARE_HISTORY          # Share history across all sessions
+setopt APPEND_HISTORY         # Append to history file, don't overwrite
+setopt INC_APPEND_HISTORY     # Write to history file immediately, not when shell exits
+setopt HIST_IGNORE_DUPS       # Don't record duplicate entries
+setopt HIST_IGNORE_ALL_DUPS   # Remove older duplicate entries from history
+setopt HIST_FIND_NO_DUPS      # Don't display duplicates when searching
+setopt HIST_SAVE_NO_DUPS      # Don't save duplicates to history file
+setopt HIST_VERIFY            # Show command with history expansion to user before running it
+# History file settings
+HISTFILE=~/.zsh_history
+HISTSIZE=50000
+SAVEHIST=50000
+
 # Load plugins with Zinit
 # Load powerlevel10k theme
 zinit ice depth"1" # git clone depth
@@ -47,10 +61,16 @@ zinit snippet OMZP::git
 zinit light jeffreytse/zsh-vi-mode
 # Syntax highlighting (load this last)
 zinit light zsh-users/zsh-syntax-highlighting
+# History substring search (load after syntax highlighting)
+zinit light zsh-users/zsh-history-substring-search
 # Auto suggestions
 zinit light zsh-users/zsh-autosuggestions
 # Auto complete
 # zinit light marlonrichert/zsh-autocomplete
+
+# custom bindings for history-substring-search
+bindkey '^[[A' history-substring-search-up
+bindkey '^[[B' history-substring-search-down
 
 # completions
 autoload -Uz compinit
@@ -61,6 +81,7 @@ source <(carapace _carapace)
 
 # Preferred editor
 export EDITOR='nvim'
+export ASTA_DIR="/Users/aman/.asta"
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
@@ -155,3 +176,10 @@ case ":$PATH:" in
   *) export PATH="$PNPM_HOME:$PATH" ;;
 esac
 # pnpm end
+
+# bun completions
+[ -s "/Users/aman/.bun/_bun" ] && source "/Users/aman/.bun/_bun"
+
+# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
+export PATH="$PATH:$HOME/.rvm/bin"
+zprof > ~/zsh_startup_profile.log
