@@ -3,13 +3,13 @@ return {
 		"yetone/avante.nvim",
 		event = "InsertEnter",
 		version = false, -- set this if you want to always pull the latest change
-		enabled = false,
+		enabled = true,
 		config = function()
 			local asta = os.getenv("ASTA_DIR")
 			if asta then
 				local k = vim.secure.read(asta .. "/openai")
 				if k then
-					-- vim.env.AVANTE_OPENAI_API_KEY = k
+					vim.env.AVANTE_OPENAI_API_KEY = k
 				end
 			end
 			require("avante").setup({
@@ -25,6 +25,9 @@ return {
 						},
 					},
 				},
+				behaviour = {
+					auto_suggestions = false, -- Experimental stage
+				},
 				file_selector = {
 					provider = "telescope",
 					provider_opts = {
@@ -36,7 +39,6 @@ return {
 				},
 			})
 		end,
-
 		-- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
 		build = "make",
 		dependencies = {
