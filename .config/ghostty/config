@@ -1,0 +1,62 @@
+# Ghostty Configuration File
+# ~/.config/ghostty/config
+
+# --- Colors ---
+foreground = "#ffffff"
+background = "#1C1C1C"
+
+cursor-color = "#38ff9d"
+cursor-text = "#000000"
+
+selection-background = "#38ff9c"
+selection-foreground = "#000000"
+
+# ANSI Colors (Palette indices 0-7)
+palette = 0=#0b3b61
+palette = 1=#ff3a3a
+palette = 2=#52ffd0
+palette = 3=#fff383
+palette = 4=#1376f9
+palette = 5=#c792ea
+palette = 6=#ff5ed4
+palette = 7=#16fda2
+
+# Bright Colors (Palette indices 8-15)
+palette = 8=#63686d
+palette = 9=#ff54b0
+palette = 10=#74ffd8
+palette = 11=#fcf5ae
+palette = 12=#388eff
+palette = 13=#ae81ff
+palette = 14=#ff6ad7
+palette = 15=#60fbbf
+
+# --- Font ---
+font-family = "Iosevka Nerd Font"
+font-size = 20
+
+# Disable italics if needed (see previous explanation)
+# font-style-italic = false
+
+# --- Window Appearance & Behavior ---
+# window-padding-y = 20,0 # top, botto
+# window-padding-x = 0     # left, right
+
+cursor-style = "bar"
+cursor-style-blink = true
+
+# Use 'none' for minimal decorations, or 'auto' for potentially better native look/feel
+window-decoration = "none"
+
+macos-option-as-alt = true
+# window-decoration = "auto"
+
+# --- Optional Transparency/Blur ---
+background-opacity = 0.85
+background-blur = 20
+
+confirm-close-surface = false
+
+# Make Option+Arrow send the standard Meta+Arrow sequences
+# keybind = alt+right=csi:1;3C   # sends \x1b[1;3C (Meta+Right)
+# keybind = alt+left=csi:1;3D    # sends \x1b[1;3D (Meta+Left)
