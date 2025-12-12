@@ -222,7 +222,28 @@ end
 M.telescope_env_files = function()
 	require("telescope.builtin").find_files({
 		prompt_title = "Find .env Files",
-		find_command = { "fd", ".env*", "-d", "1", "-H", "-I" },
+		find_command = {
+			"fd",
+			".env",
+			"-d",
+			"3",
+			"-H",
+			"-I",
+			"-E",
+			"node_modules",
+			"-E",
+			".git",
+			"-E",
+			".venv",
+			"-E",
+			"venv",
+			"-E",
+			"__pycache__",
+			"-E",
+			".tox",
+			"-E",
+			".cache",
+		},
 		hidden = true,
 	})
 end

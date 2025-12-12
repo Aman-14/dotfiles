@@ -1,5 +1,5 @@
 #!/bin/zsh
-zmodload zsh/zprof
+typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
 
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
@@ -9,7 +9,6 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
 fi
 
 export XDG_CONFIG_HOME="$HOME/.config"
-
 # If you come from bash you might have to change your $PATH.
 export PATH=$HOME/bin:/usr/local/bin:$PATH
 export PATH=/usr/local/bin:$PATH
@@ -57,6 +56,8 @@ zinit light romkatv/powerlevel10k
 
 # Git plugin
 zinit snippet OMZP::git
+# direnv plugin (keeps hook on precmd/chpwd; logs are silenced below)
+zinit snippet OMZP::direnv
 # Vi-mode plugin
 zinit light jeffreytse/zsh-vi-mode
 # Syntax highlighting (load this last)
@@ -179,7 +180,3 @@ esac
 
 # bun completions
 [ -s "/Users/aman/.bun/_bun" ] && source "/Users/aman/.bun/_bun"
-
-# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
-export PATH="$PATH:$HOME/.rvm/bin"
-zprof > ~/zsh_startup_profile.log

@@ -13,6 +13,7 @@ const server = http.createServer((req, res) => {
   console.log("----------------------------------")
   // Log the method, headers, and body
   console.log(`Method: ${req.method}`);
+  console.log(`Remote IP: ${req.socket.remoteAddress}`);
   console.log("Headers:", req.headers);
 
   let body = "";

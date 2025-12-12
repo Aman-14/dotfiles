@@ -34,23 +34,33 @@ return {
 			local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
 
 			null_ls.setup({
-				root_dir = null_ls_utils.root_pattern(".null-ls-root", "Makefile", ".git", "package.json"),
+				root_dir = function(fname)
+					return null_ls_utils.root_pattern("biome.json")(fname)
+						or null_ls_utils.root_pattern(".null-ls-root", "Makefile", ".git", "package.json")(fname)
+				end,
 				debug = false,
 
 				sources = {
 					formatting.stylua,
 					formatting.prettier.with({
+						condition = function(utils)
+							return not utils.root_has_file({ "biome.json" })
+						end,
 						extra_args = { "--ignore-path", "none" },
 					}),
 					formatting.buf,
 					formatting.shfmt,
 					-- formatting.yamlfmt,
-					-- formatting.biome,
+					formatting.biome.with({
+						condition = function(utils)
+							return utils.root_has_file({ "biome.json" })
+						end,
+					}),
 					-- formatting.forge_fmt,
 					formatting.gofmt,
 					formatting.xmllint,
 					diagnostics.yamllint.with({
-						extra_args = { "-d {extends: relaxed, rules: {line-length: {max: 120}}}" },
+						extra_args = { "-d {extends: relaxed, rules: {line-length: {max: 200}}}" },
 					}),
 					code_actions.gitsigns,
 					code_actions.refactoring,
