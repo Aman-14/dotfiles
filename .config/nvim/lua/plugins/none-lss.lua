@@ -23,7 +23,6 @@ return {
 					"spell", -- spell checker
 					"gofmt", -- golang formatter
 					"xmllint",
-					"biome",
 				},
 			})
 
@@ -51,11 +50,11 @@ return {
 					formatting.buf,
 					formatting.shfmt,
 					-- formatting.yamlfmt,
-					formatting.biome.with({
-						condition = function(utils)
-							return utils.root_has_file({ "biome.json" })
-						end,
-					}),
+					-- formatting.biome.with({
+					-- 	condition = function(utils)
+					-- 		return utils.root_has_file({ "biome.json" })
+					-- 	end,
+					-- }),
 					-- formatting.forge_fmt,
 					formatting.gofmt,
 					formatting.xmllint,
@@ -77,7 +76,10 @@ return {
 								filter = function(client)
 									-- if null-ls supports formatting then use null-ls else use lsp server
 									if current_client.supports_method("textDocument/formatting") then
-										return client.name == "null-ls"
+										if client.name == "null-ls" then
+											return true
+										end
+										return false
 									end
 									return true
 								end,

@@ -22,7 +22,7 @@ export PATH="/opt/homebrew/bin:$PATH"
 export PATH="$HOME/.mongo_tools/bin:$PATH"
 export PATH="/opt/homebrew/opt/ruby/bin:$PATH"
 
-. "$HOME/.cargo/env"
+# . "$HOME/.cargo/env"
 
 # Zinit initialization
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
@@ -57,7 +57,7 @@ zinit light romkatv/powerlevel10k
 # Git plugin
 zinit snippet OMZP::git
 # direnv plugin (keeps hook on precmd/chpwd; logs are silenced below)
-zinit snippet OMZP::direnv
+# zinit snippet OMZP::direnv
 # Vi-mode plugin
 zinit light jeffreytse/zsh-vi-mode
 # Syntax highlighting (load this last)
@@ -122,6 +122,22 @@ function stopwatch () {
     done
 }
 
+function rbhash () {
+  ruby -rjson -rpp -e '
+    input = STDIN.tty? ? `pbpaste` : STDIN.read
+
+    i = input.index("{")
+    j = input.rindex("}")
+    abort("No {..} hash found in input") unless i && j && j > i
+
+    h = input[i..j]
+
+    obj = eval(h) # only for trusted logs
+    puts JSON.pretty_generate(obj)
+  ' | jq
+}
+
+
 
 # bun
 export BUN_INSTALL="$HOME/.bun"
@@ -180,3 +196,5 @@ esac
 
 # bun completions
 [ -s "/Users/aman/.bun/_bun" ] && source "/Users/aman/.bun/_bun"
+
+if command -v wt >/dev/null 2>&1; then eval "$(command wt config shell init zsh)"; fi

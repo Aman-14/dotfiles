@@ -55,7 +55,7 @@ return {
 	},
 	cssls = {},
 	solidity_ls_nomicfoundation = {},
-	gopls = {},
+	-- gopls = {},
 	eslint = {},
 	biome = {},
 	taplo = {}, -- lsp for toml

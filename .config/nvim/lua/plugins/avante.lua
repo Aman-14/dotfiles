@@ -16,7 +16,7 @@ return {
 				provider = "openai",
 				providers = {
 					openai = {
-						endpoint = "https://api.openai.com/v1",
+						endpoint = "http://zllm.amandev.space",
 						model = "gpt-4.1",
 						timeout = 30000,
 						extra_request_body = {

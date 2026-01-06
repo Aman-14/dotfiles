@@ -280,6 +280,18 @@ M.organizeImports = function()
 	end
 
 	if filename:match("%.ts$") or filename:match("%.js$") or filename:match("%.tsx$") or filename:match("%.jsx$") then
+		for _, client in ipairs(clients) do
+			if client.name == "biome" then
+				vim.lsp.buf.code_action({
+					context = {
+						diagnostics = {},
+						only = { "source.fixAll" },
+					},
+					apply = true,
+				})
+				return
+			end
+		end
 		vim.cmd("TSToolsOrganizeImports")
 	end
 end
