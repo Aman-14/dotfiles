@@ -32,7 +32,14 @@ keymap.set("n", "<leader>-", "<C-x>") -- decrement
 keymap.set("n", "<leader>sv", "<C-w>v")     -- split window vertically
 keymap.set("n", "<leader>sh", "<C-w>s")     -- split window horizontally
 keymap.set("n", "<leader>se", "<C-w>=")     -- make split windows equal width & height
-keymap.set("n", "<leader>sx", ":close<CR>") -- close current split window
+keymap.set("n", "<leader>sx", function()
+	local ok, lib = pcall(require, "diffview.lib")
+	if ok and lib.get_current_view() then
+		vim.cmd("DiffviewClose")
+		return
+	end
+	vim.cmd("close")
+end) -- close current split window or Diffview
 
 -- replace " or ' with `
 keymap.set("v", "<leader>`", [[:s/['"]/`/g<CR>]], { noremap = true })

@@ -217,6 +217,9 @@ run = "move-node-to-workspace c"
 if.app-id = 'com.microsoft.VSCode'
 run = "move-node-to-workspace c"
 
+[[on-window-detected]]
+if.app-id = 'com.openai.codex'
+run = "move-node-to-workspace c"
 
 [[on-window-detected]]
 if.app-id = 'dev.zed.Zed'        # Zed 

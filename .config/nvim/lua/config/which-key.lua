@@ -35,6 +35,7 @@ return {
 			r = { "<cmd>lua require 'gitsigns'.reset_hunk()<cr>", "Reset Hunk" },
 			s = { ":leftabove vert G<CR>", "Git Status" },
 			d = { ":DiffviewOpen<CR>", "Diff View" },
+			f = { ":DiffviewToggleFiles<CR>", "Toggle Diffview Files" },
 			p = { [[:Git push -u origin @<CR>]], "Git Push Origin" },
 			c = { ":DiffviewClose<CR>", "Close Diff View" },
 			h = { "<cmd>lua require 'gitsigns'.stage_hunk()<cr>", "Stage Hunk" },

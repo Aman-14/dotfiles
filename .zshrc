@@ -1,4 +1,22 @@
 #!/bin/zsh
+ZSH_STARTUP_LOG="$HOME/.zsh_startup.log"
+ZSH_STARTUP_ZPROF="$HOME/.zsh_startup.zprof"
+exec {ZSH_TRACE_SAVED}>&2
+exec 2>>"$ZSH_STARTUP_LOG"
+print -r -- "---- zsh startup $(date +'%Y-%m-%d %H:%M:%S') pid $$ ----" >&2
+if [[ -n "${ZSH_PROFILE:-}" ]]; then
+  zmodload zsh/zprof
+  print -r -- "---- zsh startup $(date +'%Y-%m-%d %H:%M:%S') pid $$ ----" >> "$ZSH_STARTUP_ZPROF"
+fi
+ZSH_TRACE_PROMPTSUBST=0
+if [[ -o promptsubst ]]; then
+  ZSH_TRACE_PROMPTSUBST=1
+else
+  setopt promptsubst
+fi
+zmodload zsh/datetime
+PS4='+${EPOCHREALTIME} ${0}:%i> '
+setopt xtrace
 typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
 
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
@@ -57,7 +75,7 @@ zinit light romkatv/powerlevel10k
 # Git plugin
 zinit snippet OMZP::git
 # direnv plugin (keeps hook on precmd/chpwd; logs are silenced below)
-zinit snippet OMZP::direnv
+# zinit snippet OMZP::direnv
 # Vi-mode plugin
 zinit light jeffreytse/zsh-vi-mode
 # Syntax highlighting (load this last)
@@ -143,9 +161,9 @@ function rbhash () {
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
 
-# fnm
-export PATH="$HOME/.local/share/fnm:$PATH"
-eval "$(fnm env --use-on-cd --log-level quiet --shell zsh)"
+# # fnm
+# export PATH="$HOME/.local/share/fnm:$PATH"
+# eval "$(fnm env --use-on-cd --log-level quiet --shell zsh)"
 
 # fzf config ---------------------------------------------------------
 # Base fd command that excludes common directories
@@ -186,15 +204,24 @@ source <(fzf --zsh)
 
 unset CONDA_PREFIX
 
-# pnpm
-export PNPM_HOME="/Users/aman/Library/pnpm"
-case ":$PATH:" in
-  *":$PNPM_HOME:"*) ;;
-  *) export PATH="$PNPM_HOME:$PATH" ;;
-esac
-# pnpm end
-
 # bun completions
 [ -s "/Users/aman/.bun/_bun" ] && source "/Users/aman/.bun/_bun"
 
 if command -v wt >/dev/null 2>&1; then eval "$(command wt config shell init zsh)"; fi
+source ~/workspace/personal/ai-exec/shell/x.zsh
+
+# opencode
+export PATH=/Users/aman/.opencode/bin:$PATH
+
+eval "$(mise activate zsh)"
+
+if [[ -n "${ZSH_PROFILE:-}" ]]; then
+  zprof >> "$ZSH_STARTUP_ZPROF"
+fi
+setopt no_xtrace
+if (( ! ZSH_TRACE_PROMPTSUBST )); then
+  unsetopt promptsubst
+fi
+unset ZSH_TRACE_PROMPTSUBST
+exec 2>&$ZSH_TRACE_SAVED
+exec {ZSH_TRACE_SAVED}>&-

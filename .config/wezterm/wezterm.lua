@@ -27,7 +27,6 @@ config.colors = {
 	brights = { "#63686d", "#ff54b0", "#74ffd8", "#fcf5ae", "#388eff", "#ae81ff", "#ff6ad7", "#60fbbf" },
 }
 
-config.font = wezterm.font("Iosevka Nerd Font", { italic = false })
 config.hide_tab_bar_if_only_one_tab = true
 
 config.enable_scroll_bar = false
@@ -44,6 +43,10 @@ config.window_decorations = "RESIZE"
 -- transparant and blur background
 config.window_background_opacity = 0.85
 config.macos_window_background_blur = 20
-config.font = wezterm.font("Iosevka Nerd Font", { weight = "Regular", style = "Normal" })
+
+-- config.font = wezterm.font("JetBrainsMono Nerd Font Mono", { weight = "Regular", style = "Normal", italic = false })
+config.font = wezterm.font("Iosevka Nerd Font", { weight = "Regular", style = "Normal", italic = false })
+-- config.font = wezterm.font("Ioskeley Mono", { weight = "Regular", style = "Normal", italic = false })
+-- config.cell_width = 1
 
 return config

@@ -89,7 +89,6 @@ return {
 	},
 	-- tmux & split window navigation
 	"christoomey/vim-tmux-navigator",
-
 	-- maximizes and restores current window
 	"szw/vim-maximizer",
 	{
@@ -128,7 +127,7 @@ return {
 			require("spectre").setup()
 		end,
 	},
-	-- "sindrets/diffview.nvim",
+	{ "sindrets/diffview.nvim" },
 	-- better inputs
 	{
 		"stevearc/dressing.nvim",
