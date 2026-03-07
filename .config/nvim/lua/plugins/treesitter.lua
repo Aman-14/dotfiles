@@ -14,6 +14,18 @@ return {
 		-- 	end
 		-- end,
 		config = function()
+			local parser_config = require("nvim-treesitter.parsers").get_parser_configs()
+			parser_config.nu = {
+				install_info = {
+					url = vim.fn.stdpath("data") .. "/lazy/tree-sitter-nu",
+					files = { "src/parser.c", "src/scanner.c" },
+					branch = "main",
+					generate_requires_npm = false,
+					requires_generate_from_grammar = false,
+				},
+				filetype = "nu",
+			}
+
 			require("nvim-treesitter.configs").setup({
 				sync_install = false,
 				ignore_install = {},
@@ -35,7 +47,6 @@ return {
 				indent = { enable = true },
 				-- context_commentstring = { enable = true, enable_autocmd = false },
 				auto_install = true,
-
 				ensure_installed = {
 					"bash",
 					"c",
@@ -59,6 +70,7 @@ return {
 					"gowork",
 					"gosum",
 					"proto",
+					"nu",
 				},
 				incremental_selection = {
 					enable = true,

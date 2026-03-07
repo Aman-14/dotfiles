@@ -59,3 +59,4 @@ opt.splitbelow = true -- split horizontal window to the bottom
 
 opt.iskeyword:append("-") -- consider string-string as whole word
 opt.swapfile = false
+opt.autoread = true -- auto-reload files changed outside nvim when buffer is clean

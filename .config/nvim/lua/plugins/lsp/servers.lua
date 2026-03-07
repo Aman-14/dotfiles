@@ -44,14 +44,14 @@ return {
 	-- ty = {},
 	ruff = {},
 	tailwindcss = {
-		root_dir = require("lspconfig.util").root_pattern(
+		root_markers = {
 			"tailwind.config.js",
 			"tailwind.config.cjs",
 			"tailwind.config.ts",
 			"postcss.config.js",
 			"postcss.config.mjs",
-			"postcss.config.ts"
-		),
+			"postcss.config.ts",
+		},
 	},
 	cssls = {},
 	solidity_ls_nomicfoundation = {},

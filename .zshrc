@@ -1,146 +1,128 @@
 #!/bin/zsh
-ZSH_STARTUP_LOG="$HOME/.zsh_startup.log"
-ZSH_STARTUP_ZPROF="$HOME/.zsh_startup.zprof"
-exec {ZSH_TRACE_SAVED}>&2
-exec 2>>"$ZSH_STARTUP_LOG"
-print -r -- "---- zsh startup $(date +'%Y-%m-%d %H:%M:%S') pid $$ ----" >&2
-if [[ -n "${ZSH_PROFILE:-}" ]]; then
-  zmodload zsh/zprof
-  print -r -- "---- zsh startup $(date +'%Y-%m-%d %H:%M:%S') pid $$ ----" >> "$ZSH_STARTUP_ZPROF"
-fi
-ZSH_TRACE_PROMPTSUBST=0
-if [[ -o promptsubst ]]; then
-  ZSH_TRACE_PROMPTSUBST=1
-else
-  setopt promptsubst
-fi
-zmodload zsh/datetime
-PS4='+${EPOCHREALTIME} ${0}:%i> '
-setopt xtrace
-typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
 
-# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
-# Initialization code that may require console input (password prompts, [y/n]
-# confirmations, etc.) must go above this block; everything else may go below.
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-    source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-fi
+# Core shell behavior and shared environment defaults.
+setopt promptsubst
 
-export XDG_CONFIG_HOME="$HOME/.config"
-# If you come from bash you might have to change your $PATH.
-export PATH=$HOME/bin:/usr/local/bin:$PATH
-export PATH=/usr/local/bin:$PATH
-export PATH=$PATH:/$HOME/bin
-export PATH="/Users/aman/.codeium/windsurf/bin:$PATH"
-export PATH="/opt/homebrew/opt/mysql-client/bin:$PATH"
-export PATH=$HOME/.local/bin:$PATH
-export PATH="/opt/homebrew/opt/libpq/bin:$PATH"
-export PATH="$HOME/scripts/bin:$PATH"
-export PATH="/opt/homebrew/bin:$PATH"
-export PATH="$HOME/.mongo_tools/bin:$PATH"
-export PATH="/opt/homebrew/opt/ruby/bin:$PATH"
+export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
+export XDG_CACHE_HOME="${XDG_CACHE_HOME:-$HOME/.cache}"
+export XDG_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
+export EDITOR="nvim"
+export ASTA_DIR="$HOME/.asta"
+export BUN_INSTALL="$HOME/.bun"
+export CARAPACE_BRIDGES="zsh"
+export FZF_EXCLUDE="--exclude .git --exclude node_modules --exclude Library --exclude Applications --exclude Downloads --exclude Documents --exclude Pictures --exclude Music --exclude Movies --exclude '*.app'"
 
-. "$HOME/.cargo/env"
+# Build PATH once, keep your preferred bins early, and dedupe duplicates.
+typeset -U path PATH
+path=(
+  /opt/homebrew/bin
+  /opt/homebrew/opt/mysql-client/bin
+  /opt/homebrew/opt/libpq/bin
+  /opt/homebrew/opt/ruby/bin
+  /usr/local/bin
+  "$HOME/bin"
+  "$HOME/.local/bin"
+  "$HOME/scripts/bin"
+  "$HOME/.mongo_tools/bin"
+  "$HOME/.codeium/windsurf/bin"
+  "$HOME/.opencode/bin"
+  "$BUN_INSTALL/bin"
+  "$path[@]"
+)
 
-# Zinit initialization
-ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
-[ ! -d $ZINIT_HOME ] && mkdir -p "$(dirname $ZINIT_HOME)"
-[ ! -d $ZINIT_HOME/.git ] && git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
-source "${ZINIT_HOME}/zinit.zsh"
+# Clean up malformed entries like //Users/aman/bin left by older PATH exports.
+integer path_index
+for ((path_index = 1; path_index <= $#path; ++path_index)); do
+  while [[ ${path[path_index]} == //* ]]; do
+    path[path_index]=${path[path_index]#/}
+  done
+done
+typeset -U path PATH
 
-# History settings for proper sync across tabs
-setopt SHARE_HISTORY          # Share history across all sessions
-setopt APPEND_HISTORY         # Append to history file, don't overwrite
-setopt INC_APPEND_HISTORY     # Write to history file immediately, not when shell exits
-setopt HIST_IGNORE_DUPS       # Don't record duplicate entries
-setopt HIST_IGNORE_ALL_DUPS   # Remove older duplicate entries from history
-setopt HIST_FIND_NO_DUPS      # Don't display duplicates when searching
-setopt HIST_SAVE_NO_DUPS      # Don't save duplicates to history file
-setopt HIST_VERIFY            # Show command with history expansion to user before running it
-# History file settings
-HISTFILE=~/.zsh_history
+# Persist and share history across shells without keeping duplicate commands.
+HISTFILE="$HOME/.zsh_history"
 HISTSIZE=50000
 SAVEHIST=50000
 
-# Load plugins with Zinit
-# Load powerlevel10k theme
-zinit ice depth"1" # git clone depth
-zinit light romkatv/powerlevel10k
+setopt APPEND_HISTORY
+setopt HIST_FIND_NO_DUPS
+setopt HIST_IGNORE_ALL_DUPS
+setopt HIST_IGNORE_DUPS
+setopt HIST_SAVE_NO_DUPS
+setopt HIST_VERIFY
+setopt INC_APPEND_HISTORY
+setopt SHARE_HISTORY
 
-# zinit ice as"command" from"gh-r" \
-#           atclone"./starship init zsh > init.zsh; ./starship completions zsh > _starship" \
-#           atpull"%atclone" src"init.zsh"
-# zinit light starship/starship
+# Interactive plugins. Skip these in non-TTY shells to keep scripts lightweight.
+ZINIT_HOME="${XDG_DATA_HOME}/zinit/zinit.git"
+if [[ -t 0 && -t 1 && -r "${ZINIT_HOME}/zinit.zsh" ]]; then
+  source "${ZINIT_HOME}/zinit.zsh"
+  zinit light jeffreytse/zsh-vi-mode
+  zinit light zsh-users/zsh-syntax-highlighting
+  zinit light zsh-users/zsh-history-substring-search
+  zinit light zsh-users/zsh-autosuggestions
+  if (( $+functions[history-substring-search-up] )); then
+    bindkey '^[[A' history-substring-search-up
+    bindkey '^[[B' history-substring-search-down
+  fi
+fi
 
-# Git plugin
-zinit snippet OMZP::git
-# direnv plugin (keeps hook on precmd/chpwd; logs are silenced below)
-# zinit snippet OMZP::direnv
-# Vi-mode plugin
-zinit light jeffreytse/zsh-vi-mode
-# Syntax highlighting (load this last)
-zinit light zsh-users/zsh-syntax-highlighting
-# History substring search (load after syntax highlighting)
-zinit light zsh-users/zsh-history-substring-search
-# Auto suggestions
-zinit light zsh-users/zsh-autosuggestions
-# Auto complete
-# zinit light marlonrichert/zsh-autocomplete
-
-# custom bindings for history-substring-search
-bindkey '^[[A' history-substring-search-up
-bindkey '^[[B' history-substring-search-down
-
-# completions
+# Completion system plus a cached compdump for faster startup.
 autoload -Uz compinit
-compinit
-export CARAPACE_BRIDGES='zsh,fish,bash,inshellisense' # optional
+ZSH_CACHE_DIR="${XDG_CACHE_HOME}/zsh"
+mkdir -p "$ZSH_CACHE_DIR"
+ZSH_COMPDUMP="${ZSH_CACHE_DIR}/zcompdump-${ZSH_VERSION}"
+if [[ -s "$ZSH_COMPDUMP" ]]; then
+  compinit -d "$ZSH_COMPDUMP" -C
+else
+  compinit -d "$ZSH_COMPDUMP"
+fi
 zstyle ':completion:*' format $'\e[2;37mCompleting %d\e[m'
-source <(carapace _carapace)
 
-# Preferred editor
-export EDITOR='nvim'
-export ASTA_DIR="/Users/aman/.asta"
+# Carapace adds generated completions; cache its init script instead of regenerating it.
+if command -v carapace >/dev/null 2>&1; then
+  CARAPACE_INIT_CACHE="${XDG_CACHE_HOME}/carapace-init.zsh"
+  if [[ ! -s "$CARAPACE_INIT_CACHE" || "$CARAPACE_INIT_CACHE" -ot "$(command -v carapace)" ]]; then
+    CARAPACE_TMP="${CARAPACE_INIT_CACHE}.tmp.$$"
+    carapace _carapace >|"$CARAPACE_TMP" && mv "$CARAPACE_TMP" "$CARAPACE_INIT_CACHE"
+    rm -f "$CARAPACE_TMP"
+  fi
+  source "$CARAPACE_INIT_CACHE"
+fi
 
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+# Prompt setup.
+if command -v starship >/dev/null 2>&1; then
+  eval "$(starship init zsh)"
+fi
 
-alias vi='nvim'
+# Day-to-day command shortcuts.
+alias vi="nvim"
 alias genKey="openssl rand -base64 24"
 alias now='date -u +"%Y-%m-%dT%H:%M:%SZ"'
 alias c="clear"
 alias uuid="uuidgen | tr '[:upper:]' '[:lower:]'"
-alias git_main_branch='echo production'
-alias redis-cli='docker exec -it redis-stack redis-cli'
-alias hs='homeserver'
-alias p='pnpm'
+alias git_main_branch="echo production"
+alias redis-cli="docker exec -it redis-stack redis-cli"
+alias hs="homeserver"
+alias p="pnpm"
 alias otterscan="pm2 serve ~/workspace/misc/otterscan/dist/ --spa --port 3010"
-alias ls='eza --icons=auto'
-alias l="eza --icons=auto --long -a"
-alias ht='npx hardhat'
+alias ht="npx hardhat"
 
-function f () {
-    source ~/scripts/search.sh
+if command -v eza >/dev/null 2>&1; then
+  alias ls="eza --icons=auto"
+  alias l="eza --icons=auto --long -a"
+fi
+
+# Personal helpers for repeated tasks.
+f() {
+  source "$HOME/scripts/search.sh"
 }
 
-function secret () {
-    aws secretsmanager get-secret-value --secret-id "$1" | jq '.SecretString | fromjson'
+secret() {
+  aws secretsmanager get-secret-value --secret-id "$1" | jq '.SecretString | fromjson'
 }
 
-function stopwatch () {
-    start=$(date +%s)
-    while true; do
-        now=$(date +%s)
-        elapsed=$((now - start))
-        hours=$((elapsed / 3600))
-        minutes=$(( (elapsed / 60) % 60))
-        seconds=$((elapsed % 60))
-        printf '%02d:%02d:%02d\r' $hours $minutes $seconds
-        sleep 1
-    done
-}
-
-function rbhash () {
+rbhash() {
   ruby -rjson -rpp -e '
     input = STDIN.tty? ? `pbpaste` : STDIN.read
 
@@ -155,73 +137,61 @@ function rbhash () {
   ' | jq
 }
 
-
-
-# bun
-export BUN_INSTALL="$HOME/.bun"
-export PATH="$BUN_INSTALL/bin:$PATH"
-
-# # fnm
-# export PATH="$HOME/.local/share/fnm:$PATH"
-# eval "$(fnm env --use-on-cd --log-level quiet --shell zsh)"
-
-# fzf config ---------------------------------------------------------
-# Base fd command that excludes common directories
-export FZF_EXCLUDE="--exclude .git --exclude node_modules --exclude Library --exclude Applications --exclude Downloads --exclude Documents --exclude Pictures --exclude Music --exclude Movies --exclude '*.app'"
-# CTRL-T - Paste the selected files and directories onto the command-line
+# FZF configuration: file discovery, previews, and completion helpers.
 export FZF_CTRL_T_COMMAND="fd --type f --type d --follow $FZF_EXCLUDE"
-# ALT-C - CD into the selected directory
 export FZF_ALT_C_COMMAND="fd --type d --follow $FZF_EXCLUDE"
-# Functions used for shell completion
+
 _fzf_compgen_path() {
   sh -c "fd --follow $FZF_EXCLUDE . '$1'"
 }
+
 _fzf_compgen_dir() {
   sh -c "fd --type d --follow $FZF_EXCLUDE . '$1'"
 }
-# Default options
+
 export FZF_DEFAULT_OPTS="
-  --height 40% 
-  --layout=reverse 
-  --border 
+  --height 40%
+  --layout=reverse
+  --border
   --info=inline
   --preview='([[ -f {} ]] && (bat --style=numbers --color=always {} || cat {})) || ([[ -d {} ]] && (tree -C {} | less)) || echo {} 2> /dev/null | head -200'
   --preview-window='right:60%'
   --bind='ctrl-/:toggle-preview'
 "
-# Options specific to CTRL-T
+
 export FZF_CTRL_T_OPTS="
   --preview='([[ -f {} ]] && (bat --style=numbers --color=always {} || cat {})) || ([[ -d {} ]] && (tree -C {} | less)) || echo {} 2> /dev/null | head -200'
   --preview-window='right:60%'
 "
-# Options specific to ALT-C
+
 export FZF_ALT_C_OPTS="
   --preview 'tree -C {} | head -200'
   --preview-window='right:60%'
 "
-source <(fzf --zsh)
-# fzf config ---------------------------------------------------------
 
-unset CONDA_PREFIX
-
-# bun completions
-[ -s "/Users/aman/.bun/_bun" ] && source "/Users/aman/.bun/_bun"
-
-if command -v wt >/dev/null 2>&1; then eval "$(command wt config shell init zsh)"; fi
-source ~/workspace/personal/ai-exec/shell/x.zsh
-
-# opencode
-export PATH=/Users/aman/.opencode/bin:$PATH
-
-eval "$(mise activate zsh)"
-
-if [[ -n "${ZSH_PROFILE:-}" ]]; then
-  zprof >> "$ZSH_STARTUP_ZPROF"
+# Cache fzf's shell integration so interactive startups avoid re-running `fzf --zsh`.
+if [[ -t 0 && -t 1 ]] && command -v fzf >/dev/null 2>&1; then
+  FZF_INIT_CACHE="${XDG_CACHE_HOME}/fzf-init.zsh"
+  if [[ ! -s "$FZF_INIT_CACHE" || "$FZF_INIT_CACHE" -ot "$(command -v fzf)" ]]; then
+    FZF_INIT_TMP="${FZF_INIT_CACHE}.tmp.$$"
+    fzf --zsh >|"$FZF_INIT_TMP" && mv "$FZF_INIT_TMP" "$FZF_INIT_CACHE"
+    rm -f "$FZF_INIT_TMP"
+  fi
+  source "$FZF_INIT_CACHE"
 fi
-setopt no_xtrace
-if (( ! ZSH_TRACE_PROMPTSUBST )); then
-  unsetopt promptsubst
+
+# Tool-specific shell integrations.
+[[ -r "$HOME/.bun/_bun" ]] && source "$HOME/.bun/_bun"
+
+if command -v wt >/dev/null 2>&1; then
+  eval "$(wt config shell init zsh)"
 fi
-unset ZSH_TRACE_PROMPTSUBST
-exec 2>&$ZSH_TRACE_SAVED
-exec {ZSH_TRACE_SAVED}>&-
+
+[[ -r "$HOME/workspace/personal/ai-exec/shell/x.zsh" ]] && source "$HOME/workspace/personal/ai-exec/shell/x.zsh"
+
+if command -v mise >/dev/null 2>&1; then
+  eval "$(mise activate zsh)"
+fi
+
+# Drop temporary cache variables from the interactive environment.
+unset ZSH_CACHE_DIR ZSH_COMPDUMP CARAPACE_INIT_CACHE CARAPACE_TMP FZF_INIT_CACHE FZF_INIT_TMP

@@ -29,18 +29,29 @@ return {
 		capabilities = require("blink.cmp").get_lsp_capabilities(capabilities)
 
 		local servers = require("plugins.lsp.servers")
+		local on_attach = require("plugins.lsp.on_attach").on_attach
+		local handlers = {
+			["workspace/diagnostic/refresh"] = function(_, _, ctx)
+				local ns = vim.lsp.diagnostic.get_namespace(ctx.client_id)
+				pcall(vim.diagnostic.reset, ns)
+				return true
+			end,
+		}
+
+		vim.lsp.config("*", {
+			handlers = handlers,
+		})
 
 		for name, config in pairs(servers) do
-			require("lspconfig")[name].setup({
+			local merged_config = vim.tbl_deep_extend("force", {
 				capabilities = capabilities,
-				on_attach = require("plugins.lsp.on_attach").on_attach,
-				settings = config.settings,
-				filetypes = config.filetypes,
-				root_dir = config.root_dir,
-			})
+				on_attach = on_attach,
+			}, config or {})
+			vim.lsp.config(name, merged_config)
+			vim.lsp.enable(name)
 		end
 
-		vim.diagnostic.config({
+		local diagnostic_config = {
 			title = false,
 			underline = true,
 			virtual_text = {
@@ -80,17 +91,20 @@ return {
 				header = "",
 				prefix = "",
 			},
-		})
+		}
 
-		-- add borders in hover windows
-		vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
-			border = "rounded",
-		})
+		local ok, err = pcall(vim.diagnostic.config, diagnostic_config)
+		if not ok then
+			if not tostring(err):match("Invalid buffer id") then
+				error(err)
+			end
 
-		vim.lsp.handlers["workspace/diagnostic/refresh"] = function(_, _, ctx)
-			local ns = vim.lsp.diagnostic.get_namespace(ctx.client_id)
-			pcall(vim.diagnostic.reset, ns)
-			return true
+			-- Recover from stale diagnostics tied to deleted scratch/plugin buffers.
+			for ns, _ in pairs(vim.diagnostic.get_namespaces()) do
+				pcall(vim.diagnostic.reset, ns)
+			end
+			pcall(vim.diagnostic.config, diagnostic_config)
 		end
+
 	end,
 }

@@ -1,5 +1,5 @@
 services:
-  mongo1:
+  mongo-docker-home:
     image: mongo
     command: ["--replSet", "rs0", "--bind_ip_all", "--port", "27017"]
     ports:
@@ -40,6 +40,50 @@ services:
     volumes:
       - $HOME/docker_volumes/mongo/data/db:/data/db
     restart: always
+
+  mongo-local:
+    image: mongo
+    command: ["--replSet", "rs-local", "--bind_ip_all", "--port", "27017"]
+    ports:
+      - 27017:27017
+    healthcheck:
+      test: |
+        mongosh --host localhost --port 27017 --eval '
+          const desiredHost = "localhost:27017";
+          const rsName = "rs-local";
+
+          function ensureReplicaSet() {
+            try {
+              const cfg = rs.conf();
+              const currentHost = cfg.members[0].host;
+
+              if (currentHost !== desiredHost) {
+                print("Reconfiguring replica set host to " + desiredHost);
+                cfg.members[0].host = desiredHost;
+                rs.reconfig(cfg, { force: true });
+              }
+            } catch (err) {
+              if (err.codeName === "NotYetInitialized" || err.message.includes("no replset config has been received")) {
+                print("Initializing replica set with " + desiredHost);
+                rs.initiate({
+                  _id: rsName,
+                  members: [{ _id: 0, host: desiredHost }]
+                });
+              } else {
+                throw err;
+              }
+            }
+          }
+
+          ensureReplicaSet();
+        ' --quiet
+      interval: 5s
+      timeout: 30s
+      start_period: 0s
+      start_interval: 1s
+      retries: 50
+    volumes:
+      - $HOME/docker_volumes/mongo-local/data/db:/data/db
   redis-stack:
     image: redis/redis-stack:latest
     container_name: redis-stack

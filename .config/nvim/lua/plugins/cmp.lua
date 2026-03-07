@@ -8,7 +8,7 @@ return {
 			"Kaiser-Yang/blink-cmp-avante",
 		},
 
-		version = "*",
+		version = "1.*",
 		---@module 'blink.cmp'
 		opts = {
 			completion = {

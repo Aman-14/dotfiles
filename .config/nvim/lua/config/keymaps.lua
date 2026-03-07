@@ -55,7 +55,55 @@ keymap.set("v", "<leader>nr", replace_newlines, { noremap = true })
 keymap.set("n", "<leader>sm", ":MaximizerToggle<CR>") -- toggle split window maximization
 
 -- restart lsp server
-keymap.set("n", "<leader>rs", ":LspRestart<CR>") -- mapping to restart lsp if necessary
+keymap.set("n", "<leader>rs", function()
+	local active_clients = vim.lsp.get_clients()
+	if #active_clients == 0 then
+		vim.notify("No active LSP clients", vim.log.levels.INFO)
+		return
+	end
+
+	local managed_clients = {}
+	local seen_managed = {}
+	local null_ls_buffers = {}
+	local skipped_clients = {}
+
+	for _, client in ipairs(active_clients) do
+		if client.name == "null-ls" then
+			null_ls_buffers = vim.lsp.get_buffers_by_client_id(client.id)
+			client:stop(true)
+		elseif vim.lsp.config[client.name] ~= nil then
+			if not seen_managed[client.name] then
+				table.insert(managed_clients, client.name)
+				seen_managed[client.name] = true
+			end
+		else
+			table.insert(skipped_clients, client.name)
+		end
+	end
+
+	for _, name in ipairs(managed_clients) do
+		vim.lsp.enable(name, false)
+	end
+
+	vim.defer_fn(function()
+		for _, name in ipairs(managed_clients) do
+			vim.lsp.enable(name)
+		end
+
+		if #null_ls_buffers > 0 then
+			local ok, null_ls_client = pcall(require, "null-ls.client")
+			if ok then
+				for _, bufnr in ipairs(null_ls_buffers) do
+					pcall(null_ls_client.try_add, bufnr)
+				end
+			end
+		end
+	end, 500)
+
+	if #skipped_clients > 0 then
+		vim.notify("Skipped unmanaged clients: " .. table.concat(skipped_clients, ", "), vim.log.levels.INFO)
+	end
+end) -- mapping to restart lsp if necessary
 
 keymap.set("n", "<leader>ha", function()
 	local harpoon = require("harpoon")

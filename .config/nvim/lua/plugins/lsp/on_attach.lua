@@ -14,8 +14,11 @@ M.on_attach = function(client, bufnr)
 	nmap("gt", require("telescope.builtin").lsp_type_definitions, "Type Definition")
 
 	nmap("gl", vim.diagnostic.open_float, "Open Diagnostic Float")
-	nmap("K", vim.lsp.buf.hover, "Hover Documentation")
-	-- nmap("K", vim.lsp.with(vim.lsp.handlers.hover, { border = border }))
+	nmap("K", function()
+		vim.lsp.buf.hover({
+			border = "rounded",
+		})
+	end, "Hover Documentation")
 	nmap("gs", vim.lsp.buf.signature_help, "Signature Documentation")
 	nmap("gD", vim.lsp.buf.declaration, "Goto Declaration")
 

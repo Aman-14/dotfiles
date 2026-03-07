@@ -169,7 +169,7 @@ M.openGitOrigin = function()
 		end
 		-- Use xdg-open on Linux, open on macOS
 		local open_cmd = vim.fn.has("mac") == 1 and "open" or "xdg-open"
-		vim.fn.system(string.format("%s '%s'", open_cmd, result.full_url))
+		vim.fn.jobstart({ open_cmd, result.full_url }, { detach = true })
 		print("Opened in browser: " .. result.full_url)
 	end)
 end

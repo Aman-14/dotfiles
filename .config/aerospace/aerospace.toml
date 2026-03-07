@@ -223,7 +223,7 @@ run = "move-node-to-workspace c"
 
 [[on-window-detected]]
 if.app-id = 'dev.zed.Zed'        # Zed 
-run = "move-node-to-workspace z"
+run = "move-node-to-workspace c"
 
 [[on-window-detected]]
 if.app-id = 'org.openvpn.client.app' #  OpenVPN

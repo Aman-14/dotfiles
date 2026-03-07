@@ -37,6 +37,7 @@ config.window_padding = {
 	bottom = "0",
 }
 config.default_cursor_style = "BlinkingBar"
+config.default_prog = { "/opt/homebrew/bin/nu", "-l" }
 config.font_size = 20
 config.window_decorations = "RESIZE"
 

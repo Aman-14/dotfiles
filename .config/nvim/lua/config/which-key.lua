@@ -33,6 +33,7 @@ return {
 			j = { "<cmd>lua require 'gitsigns'.next_hunk({navigation_message = false})<cr>", "Next Hunk" },
 			l = { "<cmd>lua require 'gitsigns'.blame_line()<cr>", "Blame" },
 			r = { "<cmd>lua require 'gitsigns'.reset_hunk()<cr>", "Reset Hunk" },
+			H = { "<cmd>lua require 'gitsigns'.stage_buffer()<cr>", "Stage Buffer" },
 			s = { ":leftabove vert G<CR>", "Git Status" },
 			d = { ":DiffviewOpen<CR>", "Diff View" },
 			f = { ":DiffviewToggleFiles<CR>", "Toggle Diffview Files" },
