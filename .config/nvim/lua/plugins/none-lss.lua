@@ -44,6 +44,7 @@ return {
 					formatting.prettier.with({
 						condition = function(utils)
 							return not utils.root_has_file({ "biome.json" })
+								and not utils.root_has_file({ ".oxfmtrc.json", ".oxfmtrc.jsonc" })
 						end,
 						extra_args = { "--ignore-path", "none" },
 					}),
@@ -72,19 +73,37 @@ return {
 						group = augroup,
 						buffer = bufnr,
 						callback = function()
+							local chosen_client = nil
 							vim.lsp.buf.format({
 								filter = function(client)
 									-- if null-ls supports formatting then use null-ls else use lsp server
 									if current_client.supports_method("textDocument/formatting") then
 										if client.name == "null-ls" then
+											chosen_client = client.name
 											return true
 										end
 										return false
 									end
+									chosen_client = client.name
 									return true
 								end,
 								bufnr = bufnr,
 							})
+							if chosen_client and vim.env.NVIM_FORMAT_DEBUG then
+								local detail = chosen_client
+								if chosen_client == "null-ls" then
+									local sources = require("null-ls.sources")
+									local ft = vim.bo[bufnr].filetype
+									local names = {}
+									for _, src in ipairs(sources.get_available(ft, null_ls.methods.FORMATTING)) do
+										table.insert(names, src.name)
+									end
+									if #names > 0 then
+										detail = table.concat(names, ", ")
+									end
+								end
+								vim.notify("Formatted with " .. detail, vim.log.levels.INFO)
+							end
 						end,
 					})
 					-- end

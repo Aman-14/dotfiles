@@ -57,6 +57,8 @@ return {
 	solidity_ls_nomicfoundation = {},
 	-- gopls = {},
 	eslint = {},
+	oxlint = { mason = false },
+	oxfmt = { mason = false },
 	biome = {},
 	taplo = {}, -- lsp for toml
 	prismals = {},

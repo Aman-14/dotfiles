@@ -4,7 +4,7 @@ return {
 	dependencies = {
 		{ "williamboman/mason.nvim", config = true },
 		"mason-org/mason-lspconfig.nvim",
-		{ "j-hui/fidget.nvim",       opts = {} },
+		{ "j-hui/fidget.nvim", opts = {} },
 		"saghen/blink.cmp",
 		"b0o/schemastore.nvim",
 	},
@@ -19,9 +19,14 @@ return {
 				},
 			},
 		})
+		local mason_ensure = vim.tbl_filter(function(name)
+			local config = require("plugins.lsp.servers")[name]
+			return config == nil or config.mason ~= false
+		end, vim.tbl_keys(require("plugins.lsp.servers")))
+
 		require("mason-lspconfig").setup({
-			ensure_installed = vim.tbl_keys(require("plugins.lsp.servers")),
-			automatic_enable = false
+			ensure_installed = mason_ensure,
+			automatic_enable = false,
 		})
 		require("lspconfig.ui.windows").default_options.border = "single"
 
@@ -43,10 +48,12 @@ return {
 		})
 
 		for name, config in pairs(servers) do
+			local server_config = vim.tbl_deep_extend("force", {}, config or {})
+			server_config.mason = nil
 			local merged_config = vim.tbl_deep_extend("force", {
 				capabilities = capabilities,
 				on_attach = on_attach,
-			}, config or {})
+			}, server_config)
 			vim.lsp.config(name, merged_config)
 			vim.lsp.enable(name)
 		end
@@ -105,6 +112,5 @@ return {
 			end
 			pcall(vim.diagnostic.config, diagnostic_config)
 		end
-
 	end,
 }
