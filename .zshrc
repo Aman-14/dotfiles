@@ -9,6 +9,7 @@ export XDG_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
 export EDITOR="nvim"
 export ASTA_DIR="$HOME/.asta"
 export BUN_INSTALL="$HOME/.bun"
+export BUN_INSTALL_CACHE_DIR="/Volumes/AmanSSD/.bun-cache"
 export CARAPACE_BRIDGES="zsh"
 export FZF_EXCLUDE="--exclude .git --exclude node_modules --exclude Library --exclude Applications --exclude Downloads --exclude Documents --exclude Pictures --exclude Music --exclude Movies --exclude '*.app'"
 
@@ -192,6 +193,21 @@ fi
 if command -v mise >/dev/null 2>&1; then
   eval "$(mise activate zsh)"
 fi
+
+# Zellij: auto-rename tabs to current directory basename
+zellij_tab_name_update() {
+  if [[ -n $ZELLIJ ]]; then
+    local current_dir=$PWD
+    if [[ $current_dir == $HOME ]]; then
+      current_dir="~"
+    else
+      current_dir=${current_dir##*/}
+    fi
+    command nohup zellij action rename-tab $current_dir >/dev/null 2>&1
+  fi
+}
+zellij_tab_name_update
+chpwd_functions+=(zellij_tab_name_update)
 
 # Drop temporary cache variables from the interactive environment.
 unset ZSH_CACHE_DIR ZSH_COMPDUMP CARAPACE_INIT_CACHE CARAPACE_TMP FZF_INIT_CACHE FZF_INIT_TMP

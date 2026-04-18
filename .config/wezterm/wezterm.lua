@@ -37,9 +37,11 @@ config.window_padding = {
 	bottom = "0",
 }
 config.default_cursor_style = "BlinkingBar"
-config.default_prog = { "/opt/homebrew/bin/nu", "-l" }
+config.default_prog = { "/bin/zsh", "-l" }
 config.font_size = 20
 config.window_decorations = "RESIZE"
+config.enable_kitty_keyboard = true
+config.mux_enable_ssh_agent = false
 
 -- transparant and blur background
 config.window_background_opacity = 0.85

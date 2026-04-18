@@ -1,0 +1,6 @@
+**/.claude/settings.local.json
+.DS_Store
+*.log
+.nvimlog
+node_modules/
+*.backup

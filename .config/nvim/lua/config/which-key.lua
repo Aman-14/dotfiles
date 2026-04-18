@@ -76,7 +76,7 @@ return {
 			-- h = { "<cmd>Telescope help_tags<cr>", "Find Help" },
 			H = { "<cmd>Telescope highlights<cr>", "Find highlight groups" },
 			R = { "<cmd>Telescope registers<cr>", "Registers" },
-			t = { "<cmd>Telescope live_grep<cr>", "Live Grep" },
+			t = { function() require("fff").live_grep() end, "Live Grep (fff)" },
 			T = { "<cmd>Telescope grep_string<cr>", "Grep String" },
 			k = { "<cmd>Telescope keymaps<cr>", "Keymaps" },
 			c = { "<cmd>Telescope commands<cr>", "Commands" },

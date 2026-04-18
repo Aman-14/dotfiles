@@ -5,7 +5,7 @@ for directory in "${directories[@]}"; do
 	if [[ "$directory" == *"@"* ]]; then
 		search_dir=$(echo "$directory" | cut -d '@' -f 1)
 		depth=$(echo "$directory" | cut -d '@' -f 2)
-		all+=$(fd . "$HOME/$search_dir" --type d --exact-depth "$depth")
+		all+=$(fd -L . "$HOME/$search_dir" --type d --exact-depth "$depth")
 		all+="\n"
 	else
 		all+="$HOME/$directory\n"
