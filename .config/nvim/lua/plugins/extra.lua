@@ -89,28 +89,6 @@ return {
 	},
 	-- tmux & split window navigation
 	"christoomey/vim-tmux-navigator",
-	-- zellij pane + nvim split navigation (Ctrl+hjkl)
-	-- disabled: conflicts with vim-tmux-navigator Ctrl+hjkl bindings
-	-- {
-	-- 	"swaits/zellij-nav.nvim",
-	-- 	lazy = true,
-	-- 	event = "VeryLazy",
-	-- 	keys = {
-	-- 		{ "<c-h>", "<cmd>ZellijNavigateLeft<cr>", { silent = true, desc = "navigate left" } },
-	-- 		{ "<c-j>", "<cmd>ZellijNavigateDown<cr>", { silent = true, desc = "navigate down" } },
-	-- 		{ "<c-k>", "<cmd>ZellijNavigateUp<cr>", { silent = true, desc = "navigate up" } },
-	-- 		{ "<c-l>", "<cmd>ZellijNavigateRight<cr>", { silent = true, desc = "navigate right" } },
-	-- 	},
-	-- 	opts = {},
-	-- 	config = function(_, opts)
-	-- 		require("zellij-nav").setup(opts)
-	-- 		-- Ensure zellij returns to normal mode when exiting nvim
-	-- 		vim.api.nvim_create_autocmd("VimLeave", {
-	-- 			pattern = "*",
-	-- 			command = "silent !zellij action switch-mode normal",
-	-- 		})
-	-- 	end,
-	-- },
 	-- maximizes and restores current window
 	"szw/vim-maximizer",
 	{

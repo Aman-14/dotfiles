@@ -1,8 +1,6 @@
 #!/usr/bin/env nu
 
 let directories = [
-  "workspace/work-lsc@2"
-  "workspace/work-protostar@1"
   "workspace/personal@1"
   "workspace/misc@1"
   ".config@1"
