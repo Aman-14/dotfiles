@@ -83,7 +83,7 @@ selected="$(
       --prompt '⚡  ' \
       --header '  ^d kill session  ·  tmux sessions, sesh configs, repos' \
       --bind "ctrl-d:execute-silent(tmux kill-session -t {} 2>/dev/null || true)+reload($SCRIPT_PATH --list)" \
-      --preview 'eza -T -L2 --color=always {} 2>/dev/null || ls -la {} 2>/dev/null || echo {}' \
+      --preview 'sesh preview {} 2>/dev/null || eza -T -L2 --color=always {} 2>/dev/null || echo {}' \
       --preview-window 'right,50%'
 )"
 

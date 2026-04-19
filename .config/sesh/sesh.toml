@@ -4,3 +4,13 @@ startup_command = "nvim"
 [[session]]
 name = "docker_files"
 path = "~/docker_files"
+
+[[session]]
+name = "nvim-config"
+path = "~/.config/nvim"
+startup_command = "nvim"
+
+[[session]]
+name = "sesh-config"
+path = "~/.config/sesh"
+startup_command = "nvim sesh.toml"
