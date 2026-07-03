@@ -59,6 +59,22 @@ return {
 	eslint = {},
 	oxlint = { mason = false },
 	oxfmt = { mason = false },
+	tsgo = {
+		mason = false,
+		filetypes = require("config.typescript").ts_filetypes,
+		workspace_required = true,
+		root_dir = require("config.typescript").tsgo_root_dir,
+		cmd = function(dispatchers, config)
+			return vim.lsp.rpc.start(require("config.typescript").tsgo_cmd(config.root_dir), dispatchers, {
+				cwd = config.root_dir,
+			})
+		end,
+		on_attach = function(client, bufnr)
+			client.server_capabilities.documentFormattingProvider = false
+			client.server_capabilities.documentRangeFormattingProvider = false
+			require("plugins.lsp.on_attach").on_attach(client, bufnr)
+		end,
+	},
 	biome = {},
 	taplo = {}, -- lsp for toml
 	prismals = {},

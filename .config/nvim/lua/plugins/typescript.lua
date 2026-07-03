@@ -4,8 +4,8 @@ return {
 	dependencies = { "nvim-lua/plenary.nvim", "neovim/nvim-lspconfig" },
 	opts = {},
 	config = function()
+		local ts = require("config.typescript")
 		local capabilities = vim.lsp.protocol.make_client_capabilities()
-		local tsserver_filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" }
 
 		-- vim.lsp.enable("vue_ls")
 		require("typescript-tools").setup({
@@ -20,7 +20,8 @@ return {
 				vim.keymap.set("n", "<leader>ia", ":TSToolsAddMissingImports<CR>")
 			end,
 			capabilities = require("blink.cmp").get_lsp_capabilities(capabilities),
-			filetypes = tsserver_filetypes,
+			filetypes = ts.tsserver_filetypes,
+			root_dir = ts.tsserver_root_dir,
 			settings = {
 				tsserver_logs = "verbose",
 				separate_diagnostic_server = true,

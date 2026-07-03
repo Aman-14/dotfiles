@@ -32,7 +32,7 @@ return {
 				highlight = true,
 				lsp = {
 					auto_attach = true,
-					preference = { "typescript-tools" },
+					preference = { "typescript-tools", "tsgo" },
 				},
 				click = true,
 				separator = " " .. icons.ui.ChevronRight .. " ",
