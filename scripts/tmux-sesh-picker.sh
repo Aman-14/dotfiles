@@ -25,7 +25,12 @@ assemble_list() {
   local current_session
   current_session="$(tmux display -p '#S' 2>/dev/null || true)"
   {
-    tmux list-sessions -F '#S' 2>/dev/null | grep -vFx "$current_session" || true
+    # Sort tmux sessions by last-attached time (most recent first).
+    # session_last_attached is 0 for never-attached sessions, so they sink.
+    tmux list-sessions -F '#{session_last_attached} #S' 2>/dev/null \
+      | sort -rn -k1,1 \
+      | cut -d' ' -f2- \
+      | grep -vFx "$current_session" || true
     cat "$CONFIGS_CACHE" 2>/dev/null
     cat "$REPOS_CACHE" 2>/dev/null
   } | awk '!seen[$0]++'
@@ -72,20 +77,33 @@ atomic_write() {
   cat >"$tmp" && mv "$tmp" "$dest"
 }
 
+entry_exists() {
+  assemble_list | grep -Fx -- "$1" >/dev/null
+}
+
 # Synchronous rebuild if missing or past TTL.
 needs_refresh "$REPOS_CACHE" && build_repos | atomic_write "$REPOS_CACHE"
 needs_refresh "$CONFIGS_CACHE" && build_configs | atomic_write "$CONFIGS_CACHE"
 
-selected="$(
+fzf_output="$(
   assemble_list |
-    fzf --no-sort --ansi \
+    fzf --print-query --no-sort --ansi \
       --border-label ' sesh ' \
       --prompt '⚡  ' \
       --header '  ^d kill session  ·  tmux sessions, sesh configs, repos' \
+      --bind 'enter:accept-or-print-query' \
       --bind "ctrl-d:execute-silent(tmux kill-session -t {} 2>/dev/null || true)+reload($SCRIPT_PATH --list)" \
       --preview 'sesh preview {} 2>/dev/null || eza -T -L2 --color=always {} 2>/dev/null || echo {}' \
       --preview-window 'right,50%'
 )"
+query="$(printf '%s\n' "$fzf_output" | sed -n '1p')"
+choice="$(printf '%s\n' "$fzf_output" | sed -n '2p')"
+selected=""
+if [[ -n "$choice" ]] && { entry_exists "$choice" || [[ "$choice" = /* && -d "$choice" ]]; }; then
+  selected="$choice"
+elif [[ "$query" = /* && -d "$query" ]]; then
+  selected="$query"
+fi
 
 # Fire-and-forget background refresh so the next run reflects any new repos.
 ( build_repos | atomic_write "$REPOS_CACHE"; build_configs | atomic_write "$CONFIGS_CACHE" ) \

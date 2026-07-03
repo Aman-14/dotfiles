@@ -14,3 +14,9 @@ startup_command = "nvim"
 name = "sesh-config"
 path = "~/.config/sesh"
 startup_command = "nvim sesh.toml"
+
+
+[[session]]
+name = "notes"
+path = "~/Documents/zennotes"
+startup_command = "codex --resume"

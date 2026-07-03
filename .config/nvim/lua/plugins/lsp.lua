@@ -35,6 +35,14 @@ return {
 
 		local servers = require("plugins.lsp.servers")
 		local on_attach = require("plugins.lsp.on_attach").on_attach
+		local function is_file_buffer(bufnr)
+			return vim.api.nvim_buf_get_name(bufnr):match("^/") ~= nil
+		end
+
+		local function valid_root(root_dir)
+			return type(root_dir) == "string" and root_dir:match("^/") and vim.uv.fs_stat(root_dir) ~= nil
+		end
+
 		local handlers = {
 			["workspace/diagnostic/refresh"] = function(_, _, ctx)
 				local ns = vim.lsp.diagnostic.get_namespace(ctx.client_id)
@@ -55,6 +63,34 @@ return {
 				on_attach = on_attach,
 			}, server_config)
 			vim.lsp.config(name, merged_config)
+
+			local config_root_dir = vim.lsp.config[name].root_dir
+			local config_root_markers = vim.lsp.config[name].root_markers
+			local workspace_required = vim.lsp.config[name].workspace_required
+			vim.lsp.config(name, {
+				root_dir = function(bufnr, on_dir)
+					if not is_file_buffer(bufnr) then
+						return
+					end
+
+					if config_root_dir then
+						return config_root_dir(bufnr, function(root_dir)
+							if valid_root(root_dir) then
+								on_dir(root_dir)
+							elseif not workspace_required then
+								on_dir(nil)
+							end
+						end)
+					end
+
+					local root_dir = config_root_markers and vim.fs.root(bufnr, config_root_markers) or nil
+					if valid_root(root_dir) then
+						on_dir(root_dir)
+					elseif not workspace_required then
+						on_dir(nil)
+					end
+				end,
+			})
 			vim.lsp.enable(name)
 		end
 

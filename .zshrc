@@ -196,3 +196,9 @@ fi
 
 # Drop temporary cache variables from the interactive environment.
 unset ZSH_CACHE_DIR ZSH_COMPDUMP CARAPACE_INIT_CACHE CARAPACE_TMP FZF_INIT_CACHE FZF_INIT_TMP
+# CF CLI completions
+[[ -f "/Users/aman/.config/cf/completions/_cf.zsh" ]] && source "/Users/aman/.config/cf/completions/_cf.zsh"
+
+# gh pr merge shortcuts — keep branch after merge
+alias ghm='gh pr merge --merge'
+alias ghs='gh pr merge --squash'
